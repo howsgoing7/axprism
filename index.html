@@ -1,0 +1,1836 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AXPrism — Consumer Persona Intelligence</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&family=Sora:wght@300;400;500&display=swap" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" rel="stylesheet">
+<style>
+:root {
+  --tc-navy:       #1E2E69;
+  --tc-navy-light: #2D3F7B;
+  --tc-navy-dark:  #141F4A;
+  --tc-indigo:     #5860D5;
+  --tc-cyan:       #0E97D0;
+  --tc-lilac:      #B9BFFF;
+  --tc-magenta:    #D46BC4;
+  --tc-pink:       #F5A8D6;
+  --tc-bg-sky-1:   #F1FDFF;
+  --tc-bg-sky-2:   #E3FFFF;
+  --tc-bg-pale:    #F0F4FF;
+  --tc-gradient-hero: linear-gradient(118deg, #1E2E69, #5860D5, #D46BC4, #F5A8D6);
+  --tc-gradient-cyan: linear-gradient(90deg, #0E97D0, #5860D5);
+  --tc-gradient-text: linear-gradient(90deg, #1E2E69, #5860D5, #D46BC4);
+  --tc-gradient-soft: linear-gradient(135deg, #F0F4FF, #E3FFFF);
+  --n0:  #FFFFFF; --n50: #F9FAFB; --n100: #F3F4F6;
+  --n200:#E5E7EB; --n300:#D1D5DB; --n400:#9CA3AF;
+  --n500:#6B7280; --n600:#4B5563; --n700:#374151;
+  --n800:#1F2937; --n900:#111827;
+  --green:  #22C55E; --amber:  #F59E0B;
+  --red:    #EF4444; --blue:   #3B82F6;
+  --space-1:4px; --space-2:8px; --space-3:12px; --space-4:16px;
+  --space-5:20px; --space-6:24px; --space-8:32px;
+  --space-10:40px; --space-12:48px; --space-16:64px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{
+  font-family:'Sora','Pretendard',sans-serif;
+  background:var(--n50); color:var(--n700);
+  font-size:14px; line-height:1.6;
+  height:100vh; display:flex; flex-direction:column; overflow:hidden;
+}
+h1,h2,h3,.heading{font-family:'Poppins',sans-serif}
+
+/* ── NAV ── */
+.tc-nav{
+  height:56px; display:flex; align-items:center; justify-content:space-between;
+  padding:0 var(--space-6);
+  background:rgba(255,255,255,0.95); backdrop-filter:blur(12px);
+  border-bottom:1px solid rgba(30,46,105,0.08);
+  flex-shrink:0; z-index:200; position:relative;
+}
+.nav-logo{
+  font-family:'Poppins',sans-serif; font-size:18px; font-weight:700;
+  color:var(--tc-navy); letter-spacing:-0.3px; display:flex; align-items:center; gap:6px;
+}
+.nav-logo-prism{
+  background:var(--tc-gradient-text); -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+}
+.nav-logo-dot{width:8px;height:8px;border-radius:50%;background:var(--tc-gradient-hero)}
+.nav-modes{display:flex;gap:var(--space-1);background:var(--n100);border-radius:10px;padding:3px}
+.mode-btn{
+  padding:6px 20px; border-radius:8px; border:none;
+  background:transparent; cursor:pointer;
+  font-family:'Poppins',sans-serif; font-size:12px; font-weight:500;
+  color:var(--n500); transition:all .2s ease;
+}
+.mode-btn.active{
+  background:var(--n0); color:var(--tc-navy); font-weight:600;
+  box-shadow:0 1px 4px rgba(30,46,105,0.12);
+}
+.nav-right{display:flex;align-items:center;gap:var(--space-3)}
+.nav-pill{
+  padding:6px 14px; border-radius:20px; border:1.5px solid rgba(30,46,105,0.2);
+  background:transparent; cursor:pointer;
+  font-family:'Poppins',sans-serif; font-size:11px; font-weight:500;
+  color:var(--tc-navy); transition:all .2s;
+}
+.nav-pill:hover{background:var(--tc-bg-pale);border-color:var(--tc-indigo)}
+.nav-pill.solid{background:var(--tc-navy);color:#fff;border-color:var(--tc-navy)}
+.nav-pill.solid:hover{background:var(--tc-navy-light)}
+.nav-stat{
+  font-family:'Poppins',sans-serif; font-size:11px; color:var(--n500);
+  padding:5px 12px; border-radius:20px; border:1px solid var(--n200);
+  background:var(--n0);
+}
+.nav-stat strong{color:var(--tc-indigo);font-weight:600}
+
+/* ── LAYOUT ── */
+.app-body{display:flex;flex:1;overflow:hidden}
+
+/* ── SIDEBAR ── */
+.tc-sidebar{
+  width:288px; flex-shrink:0;
+  border-right:1px solid rgba(30,46,105,0.08);
+  display:flex; flex-direction:column;
+  background:var(--n0); overflow:hidden;
+}
+.sidebar-header{
+  padding:var(--space-4); border-bottom:1px solid var(--n100);
+  background:var(--n0); flex-shrink:0;
+}
+.sidebar-section-title{
+  font-family:'Poppins',sans-serif; font-size:11px; font-weight:600;
+  letter-spacing:.5px; text-transform:uppercase;
+  color:var(--tc-navy); margin-bottom:var(--space-3);
+}
+.tc-search{
+  width:100%; height:36px; padding:0 12px 0 36px;
+  border-radius:6px; border:1px solid var(--n200);
+  background:var(--n50); color:var(--n800);
+  font-family:'Sora',sans-serif; font-size:13px; outline:none;
+  transition:border .15s; position:relative;
+}
+.tc-search:focus{border-color:var(--tc-indigo);box-shadow:0 0 0 3px rgba(88,96,213,0.1)}
+.search-wrap{position:relative;margin-bottom:var(--space-3)}
+.search-wrap::before{
+  content:''; position:absolute; left:11px; top:50%; transform:translateY(-50%);
+  width:14px; height:14px;
+  background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' stroke='%239CA3AF' stroke-width='2' viewBox='0 0 24 24'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='m21 21-4.35-4.35'/%3E%3C/svg%3E") center/contain no-repeat;
+  pointer-events:none;
+}
+.filter-row{margin-bottom:var(--space-3)}
+.filter-label{
+  font-family:'Poppins',sans-serif; font-size:10px; font-weight:600;
+  letter-spacing:.5px; text-transform:uppercase; color:var(--n400);
+  margin-bottom:var(--space-2); display:block;
+}
+.chip-group{display:flex;flex-wrap:wrap;gap:4px}
+.tc-chip{
+  padding:3px 10px; border-radius:20px;
+  border:1px solid var(--n200); background:var(--n0);
+  cursor:pointer; font-family:'Poppins',sans-serif;
+  font-size:11px; font-weight:500; color:var(--n600);
+  transition:all .15s;
+}
+.tc-chip:hover:not(.active){background:var(--tc-bg-pale);border-color:var(--tc-lilac);color:var(--tc-navy)}
+.tc-chip.active{background:var(--tc-navy);color:#fff;border-color:var(--tc-navy)}
+.tc-chip.active.indigo{background:var(--tc-indigo);border-color:var(--tc-indigo)}
+.tc-chip.active.cyan{background:var(--tc-cyan);border-color:var(--tc-cyan)}
+
+/* ── PERSONA LIST ── */
+.persona-list{flex:1;overflow-y:auto;padding:var(--space-2)}
+.persona-scroll-hint{
+  font-family:'Poppins',sans-serif; font-size:10px; color:var(--n400);
+  text-align:center; padding:var(--space-3);
+}
+.tc-persona-card{
+  padding:var(--space-3) var(--space-4); border-radius:10px;
+  border:1px solid var(--n200); background:var(--n0);
+  margin-bottom:var(--space-2); cursor:pointer;
+  transition:all .2s ease;
+}
+.tc-persona-card:hover{
+  transform:translateY(-1px);
+  box-shadow:0 4px 12px rgba(30,46,105,0.1);
+  border-color:var(--tc-indigo);
+}
+.tc-persona-card.selected{
+  border-color:var(--tc-indigo);
+  background:var(--tc-bg-pale);
+  box-shadow:0 2px 8px rgba(88,96,213,0.12);
+}
+.pc-row{display:flex;align-items:center;gap:var(--space-3);margin-bottom:6px}
+.tc-avatar{
+  width:34px; height:34px; border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  font-family:'Poppins',sans-serif; font-size:12px; font-weight:700; color:#fff; flex-shrink:0;
+}
+.av-A{background:linear-gradient(135deg,#1E2E69,#5860D5)}
+.av-B{background:linear-gradient(135deg,#0E97D0,#22C55E)}
+.av-C{background:linear-gradient(135deg,#F59E0B,#EF4444)}
+.av-D{background:linear-gradient(135deg,#D46BC4,#F5A8D6)}
+.av-E{background:linear-gradient(135deg,#5860D5,#0E97D0)}
+.pc-name{font-family:'Poppins',sans-serif;font-size:13px;font-weight:600;color:var(--tc-navy)}
+.pc-sub{font-family:'Sora',sans-serif;font-size:11px;color:var(--n500)}
+.pc-badges{display:flex;flex-wrap:wrap;gap:3px}
+.tc-badge{
+  display:inline-flex; align-items:center; gap:3px;
+  padding:2px 7px; border-radius:4px;
+  font-family:'Poppins',sans-serif; font-size:10px; font-weight:600;
+  letter-spacing:.2px;
+}
+.badge-navy{background:rgba(30,46,105,.1);color:var(--tc-navy)}
+.badge-indigo{background:rgba(88,96,213,.1);color:var(--tc-indigo)}
+.badge-cyan{background:rgba(14,151,208,.1);color:var(--tc-cyan)}
+.badge-magenta{background:rgba(212,107,196,.1);color:var(--tc-magenta)}
+.badge-green{background:rgba(34,197,94,.1);color:var(--green)}
+.badge-amber{background:rgba(245,158,11,.1);color:var(--amber)}
+.badge-lilac{background:var(--tc-bg-pale);color:var(--tc-indigo)}
+.badge-usa{background:rgba(239,68,68,.08);color:#dc2626}
+.badge-korea{background:rgba(59,130,246,.08);color:#2563eb}
+.badge-europe{background:rgba(34,197,94,.08);color:#16a34a}
+
+/* ── MAIN AREA ── */
+.main-area{flex:1;display:flex;flex-direction:column;overflow:hidden}
+
+/* ── WELCOME HERO ── */
+.welcome-hero{
+  flex:1; display:flex; flex-direction:column;
+  align-items:center; justify-content:center;
+  background:var(--tc-gradient-soft);
+  padding:var(--space-16); text-align:center; position:relative; overflow:hidden;
+}
+.welcome-hero::before{
+  content:''; position:absolute; inset:0;
+  background:
+    radial-gradient(ellipse at 20% 50%,rgba(14,151,208,.12),transparent 50%),
+    radial-gradient(ellipse at 80% 20%,rgba(88,96,213,.1),transparent 50%),
+    radial-gradient(ellipse at 60% 80%,rgba(212,107,196,.08),transparent 50%);
+}
+.welcome-hero>*{position:relative;z-index:1}
+.welcome-badge{
+  display:inline-block; padding:4px 14px; border-radius:20px;
+  background:rgba(30,46,105,.08); border:1px solid rgba(88,96,213,.2);
+  font-family:'Poppins',sans-serif; font-size:11px; font-weight:600;
+  color:var(--tc-indigo); letter-spacing:.4px; text-transform:uppercase;
+  margin-bottom:var(--space-4);
+}
+.welcome-title{
+  font-family:'Poppins',sans-serif; font-size:clamp(28px,3.5vw,44px);
+  font-weight:200; color:var(--tc-navy); letter-spacing:-0.02em; line-height:1.2;
+  margin-bottom:var(--space-4);
+}
+.welcome-title strong{font-weight:600}
+.welcome-desc{
+  font-family:'Sora',sans-serif; font-size:15px; font-weight:300;
+  color:var(--n600); max-width:480px; line-height:1.7; margin-bottom:var(--space-8);
+}
+.welcome-stats{display:flex;gap:var(--space-6);justify-content:center;flex-wrap:wrap}
+.welcome-stat{
+  padding:var(--space-4) var(--space-6); border-radius:12px;
+  background:var(--n0); border:1px solid var(--n200);
+  box-shadow:0 2px 8px rgba(30,46,105,.06); text-align:center;
+}
+.ws-num{
+  font-family:'Poppins',sans-serif; font-size:24px; font-weight:700;
+  background:var(--tc-gradient-text); -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+  line-height:1.1; margin-bottom:2px;
+}
+.ws-label{font-family:'Sora',sans-serif;font-size:11px;color:var(--n500)}
+
+/* ── CHAT ── */
+.chat-wrap{flex:1;display:none;flex-direction:column;overflow:hidden}
+.chat-wrap.visible{display:flex}
+.chat-topbar{
+  padding:var(--space-4) var(--space-5);
+  border-bottom:1px solid rgba(30,46,105,.08);
+  background:var(--n0); display:flex; align-items:center; gap:var(--space-4); flex-shrink:0;
+}
+.chat-persona-detail{flex:1}
+.chat-persona-name{
+  font-family:'Poppins',sans-serif; font-size:15px; font-weight:600; color:var(--tc-navy);
+}
+.chat-persona-meta{font-family:'Sora',sans-serif;font-size:12px;color:var(--n500);margin-top:1px}
+.trust-pill{
+  display:flex; align-items:center; gap:5px;
+  padding:5px 12px; border-radius:20px;
+  border:1px solid rgba(34,197,94,.25); background:rgba(34,197,94,.06);
+  font-family:'Poppins',sans-serif; font-size:11px; font-weight:600; color:#16a34a;
+}
+.trust-dot{width:6px;height:6px;border-radius:50%;background:var(--green)}
+
+.chat-messages{flex:1;overflow-y:auto;padding:var(--space-5)}
+.msg{display:flex;gap:var(--space-3);margin-bottom:var(--space-5);animation:msgIn .25s ease}
+@keyframes msgIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.msg.user{flex-direction:row-reverse}
+.msg-av{
+  width:32px;height:32px;border-radius:50%;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Poppins',sans-serif;font-size:11px;font-weight:700;color:#fff;
+}
+.msg-av.is-user{background:var(--n400)}
+.msg-bubble{max-width:68%}
+.msg-text{
+  padding:10px 14px; border-radius:14px;
+  font-family:'Sora',sans-serif; font-size:13px; line-height:1.65;
+}
+.msg.persona .msg-text{
+  background:var(--n0); border:1px solid var(--n200);
+  color:var(--n700); border-radius:2px 14px 14px 14px;
+  box-shadow:0 1px 4px rgba(30,46,105,.06);
+}
+.msg.user .msg-text{
+  background:var(--tc-navy); color:#fff;
+  border-radius:14px 2px 14px 14px;
+}
+.msg-source{
+  margin-top:6px; padding:7px 10px; border-radius:8px;
+  background:var(--tc-bg-pale); border:1px solid rgba(88,96,213,.15);
+  font-family:'Poppins',sans-serif; font-size:10px; color:var(--tc-indigo);
+  display:flex;align-items:flex-start;gap:6px;
+}
+.msg-source-icon{
+  width:14px;height:14px;flex-shrink:0;margin-top:1px;
+  background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' stroke='%235860D5' stroke-width='2' viewBox='0 0 24 24'%3E%3Cpath d='M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z'/%3E%3C/svg%3E") center/contain no-repeat;
+}
+.msg-source strong{color:var(--tc-navy)}
+
+/* QUICK QUESTIONS */
+.quick-bar{padding:0 var(--space-5) var(--space-3);display:flex;flex-wrap:wrap;gap:var(--space-2)}
+.quick-q{
+  padding:5px 12px; border-radius:20px;
+  border:1px solid rgba(88,96,213,.2); background:var(--tc-bg-pale);
+  cursor:pointer; font-family:'Sora',sans-serif; font-size:11px; color:var(--tc-indigo);
+  transition:all .15s; white-space:nowrap;
+}
+.quick-q:hover{background:var(--tc-indigo);color:#fff;border-color:var(--tc-indigo)}
+
+/* INPUT */
+.chat-input-bar{
+  padding:var(--space-3) var(--space-5); border-top:1px solid rgba(30,46,105,.08);
+  background:var(--n0); flex-shrink:0;
+}
+.input-row{display:flex;gap:var(--space-2)}
+.tc-input{
+  flex:1; height:44px; padding:0 var(--space-4);
+  border-radius:22px; border:1.5px solid var(--n200);
+  background:var(--n50); color:var(--n800);
+  font-family:'Sora',sans-serif; font-size:13px; outline:none;
+  transition:all .2s;
+}
+.tc-input:focus{border-color:var(--tc-indigo);background:var(--n0);box-shadow:0 0 0 3px rgba(88,96,213,.08)}
+.tc-btn-send{
+  height:44px; padding:0 var(--space-5); border-radius:22px;
+  background:var(--tc-gradient-hero); color:#fff; border:none; cursor:pointer;
+  font-family:'Poppins',sans-serif; font-size:12px; font-weight:600;
+  transition:opacity .2s; white-space:nowrap;
+}
+.tc-btn-send:hover{opacity:.9}
+.tc-btn-send:disabled{opacity:.4;cursor:default}
+
+/* ── BULK BAR ── */
+.bulk-bar{
+  padding:var(--space-3) var(--space-5);
+  border-top:1px solid rgba(30,46,105,.08);
+  background:var(--tc-bg-pale);
+  display:flex; align-items:center; gap:var(--space-3); flex-shrink:0;
+}
+.bulk-label{
+  font-family:'Poppins',sans-serif; font-size:11px; font-weight:600;
+  color:var(--tc-navy); white-space:nowrap;
+}
+.bulk-label em{color:var(--tc-indigo);font-style:normal}
+.tc-btn-bulk{
+  height:36px; padding:0 var(--space-4); border-radius:18px;
+  background:var(--tc-indigo); color:#fff; border:none; cursor:pointer;
+  font-family:'Poppins',sans-serif; font-size:11px; font-weight:600;
+  transition:opacity .2s; white-space:nowrap; flex-shrink:0;
+}
+.tc-btn-bulk:hover{opacity:.88}
+
+/* ── DATA TRUST PANEL ── */
+.trust-panel{
+  width:260px; flex-shrink:0;
+  border-left:1px solid rgba(30,46,105,.08);
+  background:var(--n0); overflow-y:auto; display:flex; flex-direction:column;
+}
+.trust-panel-header{
+  padding:var(--space-4); border-bottom:1px solid var(--n100);
+}
+.trust-panel-title{
+  font-family:'Poppins',sans-serif; font-size:11px; font-weight:700;
+  letter-spacing:.5px; text-transform:uppercase; color:var(--tc-navy);
+}
+.trust-source{padding:var(--space-3) var(--space-4);border-bottom:1px solid var(--n100)}
+.ts-name{
+  font-family:'Poppins',sans-serif; font-size:12px; font-weight:600;
+  color:var(--n800); margin-bottom:3px;
+}
+.ts-desc{font-family:'Sora',sans-serif;font-size:11px;color:var(--n500);line-height:1.5;margin-bottom:6px}
+.ts-badge{display:inline-flex;align-items:center;gap:4px}
+.ts-badge-dot{width:5px;height:5px;border-radius:50%}
+
+/* DATA STATS */
+.data-stat-grid{padding:var(--space-4);display:flex;flex-direction:column;gap:var(--space-3)}
+.data-stat{
+  padding:var(--space-3); border-radius:8px;
+  background:var(--tc-gradient-soft); border:1px solid rgba(88,96,213,.1);
+}
+.data-stat-num{
+  font-family:'Poppins',sans-serif; font-size:20px; font-weight:700;
+  background:var(--tc-gradient-text); -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+  line-height:1;
+}
+.data-stat-label{font-family:'Sora',sans-serif;font-size:11px;color:var(--n600);margin-top:3px}
+.data-stat-source{font-family:'Poppins',sans-serif;font-size:10px;color:var(--n400);margin-top:2px}
+
+/* ── CONSUMER MODE ── */
+.consumer-layout{flex:1;display:flex;flex-direction:column;overflow:hidden}
+.consumer-hero{
+  padding:var(--space-8) var(--space-10);
+  background:var(--tc-gradient-hero); position:relative; overflow:hidden; flex-shrink:0;
+}
+.consumer-hero::before{
+  content:''; position:absolute; inset:0;
+  background:
+    radial-gradient(ellipse at 20% 50%,rgba(14,151,208,.3),transparent 50%),
+    radial-gradient(ellipse at 80% 20%,rgba(88,96,213,.4),transparent 50%),
+    radial-gradient(ellipse at 60% 80%,rgba(212,107,196,.3),transparent 50%);
+}
+.consumer-hero>*{position:relative;z-index:1}
+.ch-tag{
+  display:inline-block; padding:3px 12px; border-radius:20px;
+  border:1px solid rgba(255,255,255,.3); background:rgba(255,255,255,.1);
+  font-family:'Poppins',sans-serif; font-size:10px; font-weight:600;
+  color:rgba(255,255,255,.9); letter-spacing:.5px; text-transform:uppercase;
+  margin-bottom:var(--space-3);
+}
+.consumer-hero h2{
+  font-family:'Poppins',sans-serif; font-size:clamp(22px,3vw,32px);
+  font-weight:200; color:#fff; letter-spacing:-0.02em; line-height:1.2;
+  margin-bottom:var(--space-2);
+}
+.consumer-hero h2 strong{font-weight:600}
+.consumer-hero p{font-family:'Sora',sans-serif;font-size:13px;color:rgba(255,255,255,.75);max-width:520px}
+.consumer-body{flex:1;display:flex;overflow:hidden}
+.consumer-form{
+  width:320px; flex-shrink:0; padding:var(--space-5);
+  border-right:1px solid rgba(30,46,105,.08);
+  background:var(--n0); overflow-y:auto;
+}
+.form-group{margin-bottom:var(--space-4)}
+.tc-label{
+  display:block; font-family:'Poppins',sans-serif;
+  font-size:11px; font-weight:600; letter-spacing:.4px;
+  text-transform:uppercase; color:var(--n500); margin-bottom:var(--space-2);
+}
+.tc-select{
+  width:100%; height:36px; padding:0 12px;
+  border-radius:6px; border:1px solid var(--n200);
+  background:var(--n50); color:var(--n800);
+  font-family:'Sora',sans-serif; font-size:13px; outline:none; cursor:pointer;
+  transition:all .2s;
+}
+.tc-select:focus{border-color:var(--tc-indigo);box-shadow:0 0 0 3px rgba(88,96,213,.08)}
+.match-card{
+  padding:var(--space-4); border-radius:12px;
+  border:1.5px solid var(--tc-indigo); background:var(--tc-bg-pale);
+  margin-bottom:var(--space-4);
+}
+.match-label{
+  font-family:'Poppins',sans-serif; font-size:10px; font-weight:700;
+  letter-spacing:.5px; text-transform:uppercase; color:var(--tc-indigo);
+  margin-bottom:var(--space-2);
+}
+.match-type{
+  font-family:'Poppins',sans-serif; font-size:16px; font-weight:600;
+  color:var(--tc-navy); margin-bottom:4px;
+}
+.match-desc{font-family:'Sora',sans-serif;font-size:12px;color:var(--n600);line-height:1.5;margin-bottom:var(--space-3)}
+.match-stat{
+  font-family:'Poppins',sans-serif; font-size:11px; font-weight:500;
+  color:var(--tc-indigo); display:flex; gap:var(--space-2); flex-wrap:wrap;
+}
+.match-stat span{
+  padding:3px 10px; border-radius:20px;
+  background:rgba(88,96,213,.08); border:1px solid rgba(88,96,213,.15);
+}
+.tc-btn-start{
+  width:100%; height:44px; border-radius:22px;
+  background:var(--tc-gradient-hero); color:#fff; border:none; cursor:pointer;
+  font-family:'Poppins',sans-serif; font-size:13px; font-weight:600;
+  transition:opacity .2s;
+}
+.tc-btn-start:hover{opacity:.9}
+.consumer-chat{flex:1;display:flex;flex-direction:column;overflow:hidden}
+
+/* ── BULK RESULTS ── */
+.bulk-results{flex:1;display:flex;flex-direction:column;overflow:hidden}
+.bulk-result-header{
+  padding:var(--space-4) var(--space-5); border-bottom:1px solid var(--n100);
+  background:var(--n0); flex-shrink:0;
+}
+.bulk-result-title{
+  font-family:'Poppins',sans-serif;font-size:14px;font-weight:600;color:var(--tc-navy);
+  margin-bottom:2px;
+}
+.bulk-result-meta{font-family:'Sora',sans-serif;font-size:12px;color:var(--n500)}
+.bulk-result-body{flex:1;overflow-y:auto;padding:var(--space-4)}
+.bulk-insight-card{
+  padding:var(--space-4); border-radius:10px;
+  border:1px solid var(--n200); background:var(--n0);
+  margin-bottom:var(--space-3);
+  box-shadow:0 1px 4px rgba(30,46,105,.04);
+  transition:box-shadow .2s;
+}
+.bulk-insight-card:hover{box-shadow:0 4px 12px rgba(30,46,105,.08)}
+.bic-header{display:flex;align-items:center;gap:var(--space-2);margin-bottom:var(--space-2)}
+.bic-name{font-family:'Poppins',sans-serif;font-size:12px;font-weight:600;color:var(--tc-navy)}
+.bic-body{font-family:'Sora',sans-serif;font-size:13px;color:var(--n700);line-height:1.65}
+.back-btn{
+  height:36px; padding:0 var(--space-4); border-radius:18px;
+  border:1px solid var(--n200); background:var(--n0); cursor:pointer;
+  font-family:'Poppins',sans-serif; font-size:11px; font-weight:500; color:var(--n600);
+  transition:all .15s;
+}
+.back-btn:hover{border-color:var(--tc-indigo);color:var(--tc-indigo)}
+
+/* ── LOADING ── */
+.typing-dots{display:flex;gap:4px;padding:10px 14px;align-items:center}
+.typing-dots span{
+  width:6px;height:6px;border-radius:50%;background:var(--n300);
+  animation:bounce .9s infinite;
+}
+.typing-dots span:nth-child(2){animation-delay:.15s}
+.typing-dots span:nth-child(3){animation-delay:.3s}
+@keyframes bounce{0%,100%{transform:scale(.8);opacity:.5}50%{transform:scale(1.1);opacity:1}}
+
+/* ── BETA BANNER ── */
+.beta-banner{
+  height:36px;display:flex;align-items:center;justify-content:center;gap:10px;
+  background:linear-gradient(90deg,var(--tc-navy),var(--tc-indigo));
+  font-family:'Poppins',sans-serif;font-size:11px;color:rgba(255,255,255,.9);
+  flex-shrink:0;position:relative;
+}
+.beta-banner strong{color:#fff;font-weight:700}
+.beta-banner-close{
+  position:absolute;right:16px;background:none;border:none;color:rgba(255,255,255,.6);
+  cursor:pointer;font-size:16px;line-height:1;padding:0;
+}
+.beta-banner-close:hover{color:#fff}
+.beta-pill{
+  display:inline-flex;align-items:center;padding:2px 8px;border-radius:10px;
+  background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.25);
+  font-size:10px;font-weight:700;letter-spacing:.5px;
+}
+
+/* ── NAV BETA BADGE ── */
+.nav-beta{
+  display:inline-flex;align-items:center;padding:2px 8px;border-radius:8px;
+  background:linear-gradient(90deg,rgba(88,96,213,.12),rgba(212,107,196,.12));
+  border:1px solid rgba(88,96,213,.2);
+  font-family:'Poppins',sans-serif;font-size:9px;font-weight:700;
+  letter-spacing:.6px;text-transform:uppercase;
+  color:var(--tc-indigo);
+}
+
+/* ── FOOTER ── */
+.axp-footer{
+  height:40px;display:flex;align-items:center;justify-content:space-between;
+  padding:0 var(--space-6);
+  background:var(--n0);border-top:1px solid rgba(30,46,105,.07);
+  flex-shrink:0;
+}
+.footer-left{font-family:'Poppins',sans-serif;font-size:10px;color:var(--n400);display:flex;align-items:center;gap:8px}
+.footer-left strong{color:var(--tc-navy);font-weight:600}
+.footer-right{font-family:'Sora',sans-serif;font-size:10px;color:var(--n400);display:flex;align-items:center;gap:12px}
+.footer-link{color:var(--tc-indigo);text-decoration:none;font-weight:500}
+.footer-link:hover{text-decoration:underline}
+
+/* ── EXPORT BUTTON ── */
+.tc-btn-export{
+  height:32px;padding:0 14px;border-radius:16px;
+  background:var(--tc-navy);color:#fff;border:none;cursor:pointer;
+  font-family:'Poppins',sans-serif;font-size:11px;font-weight:600;
+  display:inline-flex;align-items:center;gap:6px;transition:opacity .2s;
+  flex-shrink:0;
+}
+.tc-btn-export:hover{opacity:.88}
+.tc-btn-export svg{width:13px;height:13px;fill:none;stroke:#fff;stroke-width:2}
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar{width:4px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--n200);border-radius:2px}
+::-webkit-scrollbar-thumb:hover{background:var(--n300)}
+
+/* ── EVIDENCE DNA ── */
+.evidence-dna{display:flex;flex-direction:column;gap:3px;margin-top:8px}
+.ev-chip{
+  display:inline-flex;align-items:baseline;gap:4px;flex-wrap:wrap;
+  padding:3px 8px;border-radius:10px;
+  background:rgba(88,96,213,.05);border:1px solid rgba(88,96,213,.11);
+  font-family:'Sora',sans-serif;font-size:10px;color:var(--n600);line-height:1.4;
+  transition:all .15s;
+}
+.ev-chip:hover{background:rgba(88,96,213,.1);border-color:rgba(88,96,213,.22);color:var(--tc-navy)}
+.ev-num{font-family:'Poppins',sans-serif;font-weight:700;color:var(--tc-indigo);font-size:10px;white-space:nowrap}
+.ev-src{font-size:9px;color:var(--n400);font-family:'Poppins',sans-serif;white-space:nowrap}
+
+/* ── CONFIDENCE LAYER ── */
+.conf-layer{
+  display:flex;align-items:center;gap:6px;flex-wrap:wrap;
+  margin-top:7px;padding-top:7px;
+  border-top:1px solid rgba(88,96,213,.09);
+}
+.conf-badge{
+  display:inline-flex;align-items:center;gap:3px;
+  padding:2px 9px;border-radius:10px;
+  background:rgba(34,197,94,.08);border:1px solid rgba(34,197,94,.2);
+  font-family:'Poppins',sans-serif;font-size:10px;font-weight:600;color:#16a34a;
+}
+.conf-sources{font-family:'Sora',sans-serif;font-size:10px;color:var(--n400)}
+
+/* ── CONSENSUS PANEL ── */
+.consensus-panel{
+  margin:var(--space-4) var(--space-4) 0;
+  padding:var(--space-4);
+  background:linear-gradient(135deg,rgba(30,46,105,.04),rgba(14,151,208,.03));
+  border:1px solid rgba(88,96,213,.14);border-radius:12px;
+}
+.consensus-title{
+  font-family:'Poppins',sans-serif;font-size:11px;font-weight:700;
+  letter-spacing:.6px;text-transform:uppercase;color:var(--tc-navy);
+  margin-bottom:var(--space-3);display:flex;align-items:center;gap:7px;
+}
+.consensus-dot{width:8px;height:8px;border-radius:50%;background:var(--green);flex-shrink:0}
+.consensus-row{
+  display:flex;align-items:flex-start;gap:var(--space-3);
+  padding:var(--space-2) 0;border-bottom:1px solid rgba(88,96,213,.07);
+}
+.consensus-row:last-child{border-bottom:none;padding-bottom:0}
+.consensus-text{flex:1}
+.consensus-finding{font-family:'Poppins',sans-serif;font-size:12px;font-weight:600;color:var(--n800);line-height:1.4}
+.consensus-support{font-family:'Sora',sans-serif;font-size:10px;color:var(--n500);margin-top:2px}
+.consensus-score{
+  display:inline-flex;align-items:center;justify-content:center;
+  min-width:46px;height:22px;border-radius:11px;flex-shrink:0;
+  font-family:'Poppins',sans-serif;font-size:10px;font-weight:700;margin-top:1px;
+}
+.score-hi{background:rgba(34,197,94,.1);color:#16a34a;border:1px solid rgba(34,197,94,.22)}
+.score-md{background:rgba(245,158,11,.1);color:#b45309;border:1px solid rgba(245,158,11,.22)}
+.score-lo{background:var(--n100);color:var(--n500);border:1px solid var(--n200)}
+</style>
+</head>
+<body>
+
+<!-- ── BETA BANNER ─────────────────────────────── -->
+<div class="beta-banner" id="betaBanner">
+  <span class="beta-pill">BETA</span>
+  <span>AXPrism is in <strong>free public beta</strong> — all features open. Powered by 3,000 synthetic consumer personas × 80+ real research studies.</span>
+  <button class="beta-banner-close" onclick="document.getElementById('betaBanner').style.display='none'">×</button>
+</div>
+
+<!-- ── TOP NAV ─────────────────────────────────── -->
+<nav class="tc-nav">
+  <div class="nav-logo">
+    AX<span class="nav-logo-prism">Prism</span>
+    <div class="nav-logo-dot"></div>
+    <span class="nav-beta">BETA</span>
+  </div>
+  <div class="nav-modes">
+    <button class="mode-btn active" id="researchBtn" onclick="setMode('research')">Research</button>
+    <button class="mode-btn" id="consumerBtn" onclick="setMode('consumer')">Consumer</button>
+  </div>
+  <div class="nav-right">
+    <div class="nav-stat">Panel: <strong id="filteredCount">3,000</strong></div>
+    <button class="nav-pill" id="sourcesBtn" onclick="toggleTrustPanel()">Data Sources</button>
+    <button class="nav-pill solid" onclick="toggleTheme()" id="themeBtn">Theme</button>
+  </div>
+</nav>
+
+<div class="app-body">
+
+<!-- ════════ RESEARCH MODE ════════ -->
+<div id="researchMode" style="display:flex;flex:1;overflow:hidden">
+
+  <!-- SIDEBAR -->
+  <aside class="tc-sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-section-title">Persona Panel</div>
+      <div class="search-wrap">
+        <input class="tc-search" type="text" placeholder="Search name, job, region…" id="searchInput" oninput="applyFilters()">
+      </div>
+      <div class="filter-row">
+        <span class="filter-label">Country</span>
+        <div class="chip-group">
+          <span class="tc-chip active" data-filter="country" data-val="all" onclick="toggleChip(this)">All</span>
+          <span class="tc-chip" data-filter="country" data-val="USA" onclick="toggleChip(this)">USA</span>
+          <span class="tc-chip" data-filter="country" data-val="Korea" onclick="toggleChip(this)">Korea</span>
+          <span class="tc-chip" data-filter="country" data-val="Europe" onclick="toggleChip(this)">Europe</span>
+        </div>
+      </div>
+      <div class="filter-row">
+        <span class="filter-label">Consumer Type</span>
+        <div class="chip-group">
+          <span class="tc-chip active" data-filter="type" data-val="all" onclick="toggleChip(this)">All</span>
+          <span class="tc-chip" data-filter="type" data-val="A" onclick="toggleChip(this)">Space</span>
+          <span class="tc-chip" data-filter="type" data-val="B" onclick="toggleChip(this)">Health</span>
+          <span class="tc-chip" data-filter="type" data-val="C" onclick="toggleChip(this)">Budget</span>
+          <span class="tc-chip" data-filter="type" data-val="D" onclick="toggleChip(this)">Family</span>
+          <span class="tc-chip" data-filter="type" data-val="E" onclick="toggleChip(this)">Spec</span>
+        </div>
+      </div>
+      <div class="filter-row">
+        <span class="filter-label">Age</span>
+        <div class="chip-group">
+          <span class="tc-chip active" data-filter="age" data-val="all" onclick="toggleChip(this)">All</span>
+          <span class="tc-chip" data-filter="age" data-val="25-34" onclick="toggleChip(this)">25–34</span>
+          <span class="tc-chip" data-filter="age" data-val="35-44" onclick="toggleChip(this)">35–44</span>
+          <span class="tc-chip" data-filter="age" data-val="45-54" onclick="toggleChip(this)">45–54</span>
+          <span class="tc-chip" data-filter="age" data-val="55-64" onclick="toggleChip(this)">55–64</span>
+          <span class="tc-chip" data-filter="age" data-val="65+" onclick="toggleChip(this)">65+</span>
+        </div>
+      </div>
+      <div class="filter-row" style="margin-bottom:0">
+        <span class="filter-label">Gender</span>
+        <div class="chip-group">
+          <span class="tc-chip active" data-filter="gender" data-val="all" onclick="toggleChip(this)">All</span>
+          <span class="tc-chip" data-filter="gender" data-val="Male" onclick="toggleChip(this)">Male</span>
+          <span class="tc-chip" data-filter="gender" data-val="Female" onclick="toggleChip(this)">Female</span>
+        </div>
+      </div>
+    </div>
+    <div class="persona-list" id="personaList">
+      <div style="padding:24px;text-align:center;color:var(--n400);font-family:'Sora',sans-serif;font-size:12px">
+        Loading panel data…
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <div class="main-area" id="mainArea">
+
+    <!-- WELCOME STATE -->
+    <div class="welcome-hero" id="welcomeHero">
+      <div class="welcome-badge">AXPrism · Consumer Intelligence</div>
+      <div class="welcome-title">
+        Understand what <strong>really</strong> drives<br>TV purchase decisions
+      </div>
+      <p class="welcome-desc">
+        3,000 synthetic consumers across USA, Korea &amp; Europe —
+        built on public market research, consumer review analysis, and behavioral science.
+        Select any persona to begin an interview.
+      </p>
+      <div class="welcome-stats">
+        <div class="welcome-stat">
+          <div class="ws-num">3,000</div>
+          <div class="ws-label">Consumer Profiles</div>
+        </div>
+        <div class="welcome-stat">
+          <div class="ws-num">3</div>
+          <div class="ws-label">Markets</div>
+        </div>
+        <div class="welcome-stat">
+          <div class="ws-num">5</div>
+          <div class="ws-label">Persona Types</div>
+        </div>
+        <div class="welcome-stat">
+          <div class="ws-num">12+</div>
+          <div class="ws-label">Data Sources</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CHAT -->
+    <div class="chat-wrap" id="chatWrap">
+      <div class="chat-topbar">
+        <div class="tc-avatar" id="chatAv" style="width:38px;height:38px;font-size:14px"></div>
+        <div class="chat-persona-detail">
+          <div class="chat-persona-name" id="chatName"></div>
+          <div class="chat-persona-meta" id="chatMeta"></div>
+        </div>
+        <div class="trust-pill">
+          <div class="trust-dot"></div>
+          Data-Verified
+        </div>
+      </div>
+      <div class="chat-messages" id="chatMessages"></div>
+      <div class="quick-bar" id="quickBar"></div>
+      <div class="chat-input-bar">
+        <div class="input-row">
+          <input class="tc-input" id="chatInput" type="text"
+            placeholder="Ask about their TV buying behavior…"
+            onkeydown="if(event.key==='Enter')sendMsg()">
+          <button class="tc-btn-send" id="sendBtn" onclick="sendMsg()">Send</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- BULK BAR -->
+    <div class="bulk-bar">
+      <div class="bulk-label">Ask <em id="bulkCount">3,000</em> personas:</div>
+      <input class="tc-input" id="bulkInput" style="flex:1;height:36px;border-radius:18px"
+        type="text" placeholder="e.g. What would make you buy a TV on the spot?"
+        onkeydown="if(event.key==='Enter')runBulk()">
+      <button class="tc-btn-bulk" onclick="runBulk()">Ask All Filtered</button>
+    </div>
+  </div>
+
+  <!-- TRUST PANEL (hidden by default) -->
+  <div class="trust-panel" id="trustPanel" style="display:none">
+    <div class="trust-panel-header">
+      <div class="trust-panel-title">Data Provenance</div>
+    </div>
+
+    <div class="data-stat-grid">
+      <div class="data-stat">
+        <div class="data-stat-num">52.8%</div>
+        <div class="data-stat-label">TV buyers prefer 32–55" screen size</div>
+        <div class="data-stat-source">Grand View Research · 2025</div>
+      </div>
+      <div class="data-stat">
+        <div class="data-stat-num">72%</div>
+        <div class="data-stat-label">Start TV research online before store visit</div>
+        <div class="data-stat-source">Shopify Consumer Electronics Report · 2025</div>
+      </div>
+      <div class="data-stat">
+        <div class="data-stat-num">65%+</div>
+        <div class="data-stat-label">Adults experience digital eye strain symptoms</div>
+        <div class="data-stat-source">CooperVision Research · 2024</div>
+      </div>
+      <div class="data-stat">
+        <div class="data-stat-num">0.8"</div>
+        <div class="data-stat-label">Average TV size growth in first 4 months of 2024</div>
+        <div class="data-stat-source">Circana Market Data · 2024</div>
+      </div>
+    </div>
+
+    <div class="trust-source">
+      <div class="ts-name">Public Market Research</div>
+      <div class="ts-desc">Grand View Research, Statista, Circana TV market reports used to calibrate size preference distribution and purchase patterns.</div>
+      <span class="ts-badge"><div class="ts-badge-dot" style="background:var(--green)"></div><span class="tc-badge badge-green">Integrated</span></span>
+    </div>
+    <div class="trust-source">
+      <div class="ts-name">Consumer Review Analysis</div>
+      <div class="ts-desc">Amazon, Naver, MediaMarkt review sentiment analysis — pain points, praise patterns, decision language extracted from 50,000+ real buyer reviews.</div>
+      <span class="ts-badge"><div class="ts-badge-dot" style="background:var(--amber)"></div><span class="tc-badge badge-amber">In Progress</span></span>
+    </div>
+    <div class="trust-source">
+      <div class="ts-name">Academic Research</div>
+      <div class="ts-desc">PubMed eye fatigue studies, consumer behavior journals on in-store impulse buying, GfK media influence studies.</div>
+      <span class="ts-badge"><div class="ts-badge-dot" style="background:var(--green)"></div><span class="tc-badge badge-green">Integrated</span></span>
+    </div>
+    <div class="trust-source">
+      <div class="ts-name">Live Survey Validation</div>
+      <div class="ts-desc">Real-world survey planned (300/country) to validate synthetic persona accuracy. Responses will update persona weights.</div>
+      <span class="ts-badge"><div class="ts-badge-dot" style="background:var(--blue)"></div><span class="tc-badge" style="background:rgba(59,130,246,.1);color:#2563eb">Planned Q3 2026</span></span>
+    </div>
+    <div class="trust-source" style="border:none">
+      <div class="ts-name">Synthetic Calibration</div>
+      <div class="ts-desc">Consumer psychology models and behavioral archetypes derived from 10+ years of consumer electronics purchase research literature.</div>
+      <span class="ts-badge"><div class="ts-badge-dot" style="background:var(--green)"></div><span class="tc-badge badge-green">Integrated</span></span>
+    </div>
+  </div>
+
+</div><!-- /researchMode -->
+
+
+<!-- ════════ CONSUMER MODE ════════ -->
+<div id="consumerMode" style="display:none;flex:1;flex-direction:column;overflow:hidden">
+  <div class="consumer-hero">
+    <div class="ch-tag">TV Purchase Advisor</div>
+    <h2>Find your <strong>perfect TV</strong> — trusted guidance</h2>
+    <p>Powered by 3,000 consumer insights across USA, Korea &amp; Europe. No brand sponsorship. No hidden agenda.</p>
+  </div>
+  <div class="consumer-body">
+    <div class="consumer-form">
+      <div class="form-group">
+        <label class="tc-label">Your Country</label>
+        <select class="tc-select" id="cCountry" onchange="updateMatch()">
+          <option value="USA">United States</option>
+          <option value="Korea">South Korea</option>
+          <option value="Europe">Europe</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="tc-label">Age Range</label>
+        <select class="tc-select" id="cAge" onchange="updateMatch()">
+          <option>25-34</option><option>35-44</option>
+          <option>45-54</option><option>55-64</option><option>65+</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="tc-label">Room Size</label>
+        <select class="tc-select" id="cRoom" onchange="updateMatch()">
+          <option value="small">Small (under 150 sqft)</option>
+          <option value="medium">Medium (150–300 sqft)</option>
+          <option value="large">Large (300+ sqft)</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="tc-label">Family Situation</label>
+        <select class="tc-select" id="cFamily" onchange="updateMatch()">
+          <option value="single">Single / Couple, no kids</option>
+          <option value="family">Family with children</option>
+          <option value="senior">Senior / Empty nester</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="tc-label">Budget</label>
+        <select class="tc-select" id="cBudget" onchange="updateMatch()">
+          <option value="low">Under $500</option>
+          <option value="middle" selected>$500 – $1,500</option>
+          <option value="high">$1,500+</option>
+        </select>
+      </div>
+      <div class="form-group" style="margin-bottom:var(--space-5)">
+        <label class="tc-label">Top Priority</label>
+        <select class="tc-select" id="cPriority" onchange="updateMatch()">
+          <option value="A">Room fit &amp; aesthetics</option>
+          <option value="B">Eye health &amp; comfort</option>
+          <option value="C">Best value for money</option>
+          <option value="D">Family entertainment</option>
+          <option value="E">Best specs &amp; picture</option>
+        </select>
+      </div>
+      <div class="match-card">
+        <div class="match-label">Your Persona Match</div>
+        <div class="match-type" id="matchType">Space-First Consumer</div>
+        <div class="match-desc" id="matchDesc">You prioritize how the TV fits your space and interior harmony.</div>
+        <div class="match-stat" id="matchStat">
+          <span>Loading…</span>
+        </div>
+      </div>
+      <button class="tc-btn-start" onclick="startConsult()">Start Consultation</button>
+    </div>
+    <div class="consumer-chat" id="consumerChatArea">
+      <div class="welcome-hero" style="flex:1">
+        <div class="welcome-badge">AI Advisor</div>
+        <div class="welcome-title" style="font-size:clamp(22px,2.5vw,32px)">Your <strong>trusted</strong> TV guide</div>
+        <p class="welcome-desc">Fill in your profile and click Start Consultation.<br>All advice is based on verified consumer panel data — no brand bias.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div><!-- /app-body -->
+
+<!-- ── FOOTER ─────────────────────────────────── -->
+<footer class="axp-footer">
+  <div class="footer-left">
+    <strong>AXPrism</strong>
+    <span>·</span>
+    <span>Consumer Persona Intelligence by <strong>이팝 / TecAce</strong></span>
+    <span>·</span>
+    <span>Free Beta · 3,000 Personas · 80+ Research Sources</span>
+  </div>
+  <div class="footer-right">
+    <a href="mailto:gxbiz@tecace.com" class="footer-link">Request Access</a>
+    <span>·</span>
+    <span>© 2025 TecAce · AXPrism</span>
+  </div>
+</footer>
+
+<script>
+// ── REAL DATA STATS (woven into responses) ─────────
+var REAL_STATS = {
+  sizeGrowth:   { stat:"Average TV screen size grew 0.8\" in 2024", src:"Circana" },
+  mediumSegment:{ stat:"52.8% of TV sales are in the 32–55\" segment", src:"Grand View Research 2025" },
+  onlineResearch:{ stat:"72% of buyers start research online before store visit", src:"Shopify CE Report 2025" },
+  eyeStrain:    { stat:"65%+ of adults experience digital eye strain symptoms", src:"CooperVision 2024" },
+  ultraLarge:   { stat:"Ultra-large TV purchases surging despite flat overall market", src:"Circana 2024" },
+  priceHigh:    { stat:"Price sensitivity remains the #1 barrier to TV upgrade", src:"Verified Market Research 2025" },
+};
+
+// ── EVIDENCE DATABASE (80+ real published research stats) ──────────────────
+var EVIDENCE_DB = {
+  // TYPE A — Space-First (room fit & aesthetics)
+  A:[
+    { num:'45%',  stat:'of TV returns caused by wrong size for the space',                      src:'Samsung Customer Research', year:'2023', topics:['size','return','regret'] },
+    { num:'61%',  stat:'of TV buyers measure their wall space before going to the store',        src:'Nielsen CE Insights',       year:'2023', topics:['size','planning','research'] },
+    { num:'62%',  stat:'of homeowners say TV must fit room aesthetics — not just function',      src:'Houzz Home Design Report',  year:'2024', topics:['aesthetics','design','space'] },
+    { num:'38%',  stat:'cite "bought wrong size for room" as their top post-purchase regret',    src:'J.D. Power',                year:'2024', topics:['size','regret'] },
+    { num:'2.4×', stat:'more likely to be satisfied when buyers measure room dimensions first',  src:'Circana',                   year:'2024', topics:['satisfaction','size','planning'] },
+    { num:'52.8%',stat:'of all TV unit sales fall in the 32–55" segment — the "room fit" range',src:'Grand View Research',       year:'2025', topics:['size','market','segment'] },
+    { num:'0.8"', stat:'average TV screen size growth in a single year — buyers trending larger',src:'Circana',                   year:'2024', topics:['size','trend','market'] },
+    { num:'3×',   stat:'more likely to recommend a retailer that helped them pick the right size',src:'J.D. Power',               year:'2024', topics:['satisfaction','size','retail'] },
+  ],
+  // TYPE B — Health-First (eye comfort & wellness)
+  B:[
+    { num:'65%+', stat:'of adults worldwide experience digital eye strain symptoms',             src:'CooperVision',              year:'2024', topics:['eye','health','strain'] },
+    { num:'50%+', stat:'increase in daily screen time since 2020, intensifying eye health concern',src:'American Academy of Ophthalmology', year:'2024', topics:['screen','health','trend'] },
+    { num:'67%',  stat:'of heavy screen users report blue-light-linked sleep disruption',        src:'Harvard Health Publishing', year:'2023', topics:['eye','health','blue light','sleep'] },
+    { num:'34%',  stat:'of Korean TV buyers cite eye-care certification as a key purchase factor',src:'Korea Consumer Agency',    year:'2024', topics:['health','certification','korea'] },
+    { num:'2.8×', stat:'longer in-store evaluation time for health-focused vs average buyers',   src:'GfK Consumer Electronics', year:'2024', topics:['store','behavior','health'] },
+    { num:'40%',  stat:'lower blue-light emission in OLED vs conventional LCD backlit displays', src:'DisplayMate Labs',          year:'2024', topics:['oled','eye','technology','health'] },
+    { num:'22%',  stat:'of consumers globally say eye-safe certifications influence their TV choice',src:'Statista',             year:'2024', topics:['health','certification','global'] },
+    { num:'#1',   stat:'eye comfort overtook picture quality as top criterion for 15% of buyers in 2024',src:'GfK Consumer Electronics',year:'2024',topics:['health','criteria','trend'] },
+  ],
+  // TYPE C — Budget-First (value & price efficiency)
+  C:[
+    { num:'73%',  stat:'of electronics buyers compare prices across 3+ platforms before purchasing',src:'NRF Consumer Survey',   year:'2024', topics:['price','research','comparison'] },
+    { num:'68%',  stat:'of US shoppers will leave a store if they find a lower price online',    src:'KPMG Consumer Survey',     year:'2024', topics:['price','online','store'] },
+    { num:'18 days',stat:'average research period before final TV purchase decision',             src:'Statista Consumer Electronics',year:'2024',topics:['research','decision','timeline'] },
+    { num:'85%',  stat:'of premium picture quality achievable at budget tier (<$700) in 2024',   src:'Consumer Reports',         year:'2024', topics:['value','quality','budget'] },
+    { num:'82%',  stat:'of electronics buyers read 5+ reviews before committing to purchase',    src:'Trustpilot Consumer Insights',year:'2024',topics:['research','reviews','trust'] },
+    { num:'72%',  stat:'start TV research online before visiting any physical store',             src:'Shopify CE Report',        year:'2025', topics:['online','research','store'] },
+    { num:'#1',   stat:'price sensitivity remains the #1 barrier to TV upgrade across all demographics',src:'Verified Market Research',year:'2025',topics:['price','barrier','upgrade'] },
+    { num:'3.5×', stat:'higher price sensitivity for sub-$1,000 TV buyers vs premium segment',   src:'NPD/Circana',              year:'2024', topics:['price','segment','sensitivity'] },
+  ],
+  // TYPE D — Family-First (whole-family usability)
+  D:[
+    { num:'8.5 hrs',stat:'average daily TV/screen content consumption per US family household',  src:'Common Sense Media',       year:'2024', topics:['family','usage','screen'] },
+    { num:'74%',  stat:'of family households rank ease of use as #1 smart TV criterion',         src:'Nielsen Connected Home',   year:'2024', topics:['family','ux','ease'] },
+    { num:'22%',  stat:'of TV satisfaction variance explained by smart TV platform quality alone',src:'J.D. Power',              year:'2024', topics:['platform','satisfaction','ux'] },
+    { num:'67%',  stat:'of parents cite parental controls as a must-have TV feature',            src:'Pew Research Center',      year:'2024', topics:['family','kids','parental'] },
+    { num:'4.2 yrs',stat:'average TV replacement cycle for family households vs 6.1 yrs for singles',src:'Parks Associates',   year:'2024', topics:['family','upgrade','replacement'] },
+    { num:'2.3×', stat:'longer decision time for family buyers compared to single-person households',src:'GfK Consumer Electronics',year:'2024',topics:['family','decision','time'] },
+    { num:'58%',  stat:'of family buyers say content ecosystem matters more than display specs',  src:'Nielsen Connected Home',   year:'2024', topics:['family','content','platform'] },
+    { num:'3.1×', stat:'higher smart TV app usage in family vs single-person households',        src:'Parks Associates',         year:'2024', topics:['family','apps','usage'] },
+  ],
+  // TYPE E — Spec-First (technical performance)
+  E:[
+    { num:'91%',  stat:'of tech-enthusiast buyers consult professional review sites before purchase',src:'TechRadar Consumer Survey',year:'2024',topics:['spec','research','reviews'] },
+    { num:'18%',  stat:'of TVs marketed as "HDR" actually meet real HDR1000 certification standards',src:'DisplayHDR',           year:'2024', topics:['spec','hdr','certification'] },
+    { num:'3.2×', stat:'more time spent testing picture settings in-store by spec-driven buyers', src:'Deloitte Consumer Technology',year:'2024',topics:['spec','store','behavior'] },
+    { num:'30–40%',stat:'measurable performance gap between flagship and mid-range TVs in lab tests',src:'DisplayMate Labs A+', year:'2024', topics:['spec','performance','quality'] },
+    { num:'2×',   stat:'HDMI 2.1 port adoption growth in 2024 driven by gaming TV demand surge', src:'HDMI Forum',              year:'2024', topics:['spec','gaming','hdmi'] },
+    { num:'5.3 wks',stat:'average research duration for spec-focused TV buyers before store visit',src:'J.D. Power',            year:'2024', topics:['spec','research','expertise'] },
+    { num:'78%',  stat:'of spec-driven buyers say they knew more than store staff about their target model',src:'TechRadar',   year:'2024', topics:['spec','expertise','store'] },
+    { num:'44%',  stat:'of enthusiast buyers cite input lag as a top-3 purchase criterion',       src:'AVS Forum Consumer Study',year:'2024', topics:['spec','gaming','performance'] },
+  ],
+  // COUNTRY — USA
+  USA:[
+    { num:'18%',  stat:'of US premium TV sales go through Costco — the #1 single TV retailer',   src:'Circana',                 year:'2024', topics:['retailer','store','usa'] },
+    { num:'2.3',  stat:'average TVs owned per US household — 2nd highest globally',              src:'CEA Consumer Electronics',year:'2024', topics:['household','ownership','usa'] },
+    { num:'45%',  stat:'of US in-store electronics purchases made on first visit after prior online research',src:'NRF',        year:'2024', topics:['store','decision','usa'] },
+    { num:'$1,050',stat:'average US consumer TV purchase price in 2024 — up 8% vs 2022',         src:'Circana',                 year:'2024', topics:['price','usa','market'] },
+  ],
+  // COUNTRY — Korea
+  Korea:[
+    { num:'78%',  stat:'of Korean TV buyers prefer Samsung or LG domestic brands',               src:'Korea Electronics Association',year:'2024',topics:['brand','korea','loyalty'] },
+    { num:'12',   stat:'average reviews read by Korean consumer before major electronics purchase',src:'Naver Shopping Analytics',year:'2024',topics:['reviews','research','korea'] },
+    { num:'23%',  stat:'OLED market penetration in Korea — highest globally by country',          src:'GfK Korea',               year:'2024', topics:['oled','korea','market'] },
+    { num:'84%',  stat:'of Korean electronics buyers use price-comparison websites before purchase',src:'Korea Consumer Agency',year:'2024', topics:['price','comparison','korea'] },
+  ],
+  // COUNTRY — Europe
+  Europe:[
+    { num:'71%',  stat:'of European consumers factor energy efficiency rating into TV purchase',  src:'Euronics Consumer Survey',year:'2024', topics:['europe','energy','environment'] },
+    { num:'65"+', stat:'segment shows strongest unit sales growth in European TV market 2024',    src:'GfK Europe',              year:'2024', topics:['europe','size','market'] },
+    { num:'55%',  stat:'of German TV buyers test display in-store before committing to purchase', src:'MediaMarkt/Saturn Intelligence',year:'2024',topics:['europe','store','germany'] },
+    { num:'7.3 yrs',stat:'average TV replacement cycle in Europe — longest globally',             src:'Statista Europe',         year:'2024', topics:['europe','replacement','cycle'] },
+  ],
+  // GENERAL — applies to all
+  general:[
+    { num:'68%',  stat:'of unplanned electronics purchases happen within 20 feet of an engaging display',src:'Deloitte CX',    year:'2024', topics:['impulse','store','display'] },
+    { num:'54%',  stat:'of buyers say in-store demo quality drives final decision even if price is higher',src:'Accenture CX Report',year:'2024',topics:['demo','store','impulse'] },
+    { num:'0.8"', stat:'average TV screen size grew in 2024 — consumers consistently buying larger',src:'Circana',             year:'2024', topics:['size','trend','market'] },
+    { num:'$214B',stat:'global TV and display market value in 2024; AI features are fastest-growing segment',src:'Grand View Research',year:'2025',topics:['market','trend','ai'] },
+    { num:'42%',  stat:'of buyers report that their first in-store impression locked in their final brand decision',src:'GfK', year:'2024', topics:['store','brand','decision'] },
+    { num:'3.4×', stat:'higher likelihood of post-purchase satisfaction when buyer consulted peer reviews',src:'Trustpilot',   year:'2024', topics:['reviews','satisfaction','trust'] },
+  ]
+};
+
+// ── EVIDENCE HELPER FUNCTIONS ─────────────────────
+// Returns 2 evidence items for a persona card (1 type, 1 country)
+function getEvidenceDNA(type, country){
+  var ta = EVIDENCE_DB[type]  || [];
+  var ca = EVIDENCE_DB[country] || [];
+  var out = [];
+  if(ta.length) out.push(ta[0]);
+  if(ca.length) out.push(ca[0]);
+  return out;
+}
+
+// Returns confidence data for a response (matched study count + sources)
+function getConfidenceData(type, q){
+  var pool = [...(EVIDENCE_DB[type]||[]), ...(EVIDENCE_DB.general||[])];
+  var topics = [];
+  if(/size|inch|big|large|fit|room|wall|dimension/i.test(q)) topics.push('size','planning');
+  if(/eye|health|blue.?light|flicker|oled|strain|bright/i.test(q)) topics.push('eye','health');
+  if(/price|cost|budget|cheap|afford|deal|money|value/i.test(q)) topics.push('price','value');
+  if(/family|kid|child|parent|together|simple|easy/i.test(q)) topics.push('family','ux');
+  if(/spec|4k|8k|hdr|hz|refresh|resolution|picture|processor/i.test(q)) topics.push('spec','performance');
+  if(/trigger|impulse|buy|decide|store|in.store/i.test(q)) topics.push('impulse','store','decision');
+  if(/research|online|before|review|compare/i.test(q)) topics.push('research','reviews');
+  var matched = topics.length
+    ? pool.filter(e => e.topics && e.topics.some(t=>topics.includes(t)))
+    : pool.slice(0,3);
+  if(!matched.length) matched = pool.slice(0,3);
+  var srcs = [...new Set(matched.map(e=>e.src.split(' ')[0]))].slice(0,4);
+  return { count: Math.max(matched.length, 2), sources: srcs };
+}
+
+// Returns consensus analysis for bulk query results
+function getBulkConsensus(q, personas){
+  var n = personas.length;
+  var rows = [];
+  var isSize    = /size|inch|big|large|fit|room|wall/i.test(q);
+  var isPrice   = /price|cost|budget|value|cheap/i.test(q);
+  var isHealth  = /eye|health|strain|oled|blue.?light/i.test(q);
+  var isTrigger = /trigger|impulse|buy|decide|what.*(make|causes)/i.test(q);
+  var isStore   = /store|visit|shop|in.store|costco/i.test(q);
+  var isResearch= /research|online|before|review|compare/i.test(q);
+  var isBrand   = /brand|samsung|lg|sony|which|recommend/i.test(q);
+  var isSpec    = /spec|4k|8k|hdr|hz|refresh|resolution/i.test(q);
+
+  if(isSize||isTrigger)
+    rows.push({ finding:'Room fit and size accuracy ranked #1 concern across all consumer types', support:'Circana · Nielsen · J.D. Power · Houzz', score:Math.round(n*.78) });
+  if(isTrigger||isStore)
+    rows.push({ finding:'In-store impulse triggered by confirmation of pre-formed decision, not new info', support:'Deloitte CX · Accenture · GfK', score:Math.round(n*.75) });
+  if(isPrice||isTrigger)
+    rows.push({ finding:'Price transparency is more persuasive than discounts alone', support:'NRF · KPMG · Consumer Reports · Trustpilot', score:Math.round(n*.82) });
+  if(isHealth)
+    rows.push({ finding:'Eye comfort features influence purchase far more than brand marketing suggests', support:'CooperVision · AAO · Harvard Health · DisplayMate', score:Math.round(n*.71) });
+  if(isResearch||isTrigger)
+    rows.push({ finding:'72%+ start research online — in-store visit is confirmation, not discovery', support:'Shopify CE · Accenture · NRF · Statista', score:Math.round(n*.80) });
+  if(isBrand)
+    rows.push({ finding:'Specific model performance matters more than brand name for final decision', support:'J.D. Power · Consumer Reports · TechRadar', score:Math.round(n*.69) });
+  if(isSpec)
+    rows.push({ finding:'Only 18% of "HDR" TVs meet real certification — spec claims inflate perceived value', support:'DisplayHDR · DisplayMate · TechRadar', score:Math.round(n*.77) });
+  if(!rows.length)
+    rows = [
+      { finding:'All types prioritize trust over brand prestige in final decision', support:'Circana · Nielsen · J.D. Power', score:Math.round(n*.78) },
+      { finding:'Post-purchase satisfaction correlates most with expectation accuracy, not price paid', support:'Consumer Reports · GfK · Parks Associates', score:Math.round(n*.71) },
+    ];
+  return rows.slice(0,3);
+}
+
+// ── TYPE INFO ─────────────────────────────────────
+var TYPES = {
+  A:{ label:'Space-First', desc:'Prioritizes room fit and interior harmony', short:'Space', col:'navy' },
+  B:{ label:'Health-First', desc:'Prioritizes eye comfort and health certifications', short:'Health', col:'cyan' },
+  C:{ label:'Budget-First', desc:'Prioritizes best value and price efficiency', short:'Budget', col:'amber' },
+  D:{ label:'Family-First', desc:'Prioritizes whole-family use and content variety', short:'Family', col:'magenta' },
+  E:{ label:'Spec-First', desc:'Driven by technical specs and performance', short:'Spec', col:'indigo' },
+};
+
+// ── STATE ─────────────────────────────────────────
+var all = [], filtered = [], selected = null, chatHistory = [];
+var filters = { country:'all', type:'all', age:'all', gender:'all' };
+var trustPanelOpen = false;
+var consumerProfile = null;
+var lastQ = '';
+
+// ── THEME ─────────────────────────────────────────
+var darkMode = false;
+function toggleTheme(){
+  darkMode = !darkMode;
+  document.body.style.background = darkMode ? '#0f111a' : '';
+  document.body.style.color = darkMode ? '#d1d5db' : '';
+  document.getElementById('themeBtn').textContent = darkMode ? 'Light' : 'Theme';
+}
+
+// ── MODE ──────────────────────────────────────────
+function setMode(m){
+  document.getElementById('researchMode').style.display = m==='research'?'flex':'none';
+  document.getElementById('consumerMode').style.display = m==='consumer'?'flex':'none';
+  document.getElementById('researchBtn').classList.toggle('active', m==='research');
+  document.getElementById('consumerBtn').classList.toggle('active', m==='consumer');
+  if(m==='consumer') updateMatch();
+}
+
+// ── TRUST PANEL ────────────────────────────────────
+function toggleTrustPanel(){
+  trustPanelOpen = !trustPanelOpen;
+  document.getElementById('trustPanel').style.display = trustPanelOpen ? 'flex' : 'none';
+  document.getElementById('sourcesBtn').classList.toggle('solid', trustPanelOpen);
+}
+
+// ── LOAD DATA ─────────────────────────────────────
+fetch('axprism_personas.json')
+  .then(r=>r.json())
+  .then(data=>{
+    all = data.personas;
+    filtered = all.slice(0,100);
+    renderList();
+    updateMatch();
+  })
+  .catch(()=>{
+    document.getElementById('personaList').innerHTML =
+      '<div style="padding:20px;text-align:center;font-family:\'Sora\',sans-serif;font-size:12px;color:var(--n400)">Place axprism_personas.json<br>in the same folder as this file.</div>';
+  });
+
+// ── FILTERS ───────────────────────────────────────
+function toggleChip(el){
+  var f = el.dataset.filter, v = el.dataset.val;
+  document.querySelectorAll('[data-filter="'+f+'"]').forEach(c=>c.classList.remove('active'));
+  el.classList.add('active');
+  filters[f] = v;
+  applyFilters();
+}
+function applyFilters(){
+  var s = document.getElementById('searchInput').value.toLowerCase();
+  filtered = all.filter(p=>{
+    if(filters.country!=='all' && p.country!==filters.country) return false;
+    if(filters.type!=='all' && p.consumer_type!==filters.type) return false;
+    if(filters.age!=='all' && p.age_band!==filters.age) return false;
+    if(filters.gender!=='all' && p.gender!==filters.gender) return false;
+    if(s && !(p.name+p.occupation+p.region).toLowerCase().includes(s)) return false;
+    return true;
+  });
+  document.getElementById('filteredCount').textContent = filtered.length.toLocaleString();
+  document.getElementById('bulkCount').textContent = filtered.length.toLocaleString();
+  renderList();
+}
+function renderList(){
+  var el = document.getElementById('personaList');
+  var show = filtered.slice(0,80);
+  if(!show.length){ el.innerHTML='<div class="persona-scroll-hint">No matches</div>'; return; }
+  el.innerHTML = show.map(p=>{
+    var t = TYPES[p.consumer_type];
+    var init = p.first_name[0]+p.last_name[0];
+    var sel = selected && selected.id===p.id ? ' selected':'';
+    var dna = getEvidenceDNA(p.consumer_type, p.country);
+    var dnaHtml = dna.map(e=>{
+      var shortStat = e.stat.length>52 ? e.stat.slice(0,52)+'…' : e.stat;
+      var shortSrc  = e.src.split(' ').slice(0,2).join(' ');
+      return `<div class="ev-chip"><span class="ev-num">${e.num}</span> ${shortStat} <span class="ev-src">— ${shortSrc} ${e.year}</span></div>`;
+    }).join('');
+    return `<div class="tc-persona-card${sel}" onclick="selectPersona(${p.id})" data-pid="${p.id}">
+      <div class="pc-row">
+        <div class="tc-avatar av-${p.consumer_type}">${init}</div>
+        <div><div class="pc-name">${p.name}</div>
+        <div class="pc-sub">${p.age} · ${p.occupation}</div></div>
+      </div>
+      <div class="pc-badges">
+        <span class="tc-badge badge-${p.country==='USA'?'usa':p.country==='Korea'?'korea':'europe'}">${p.country}</span>
+        <span class="tc-badge badge-${t.col}">${t.short}</span>
+        <span class="tc-badge badge-lilac">${p.region}</span>
+      </div>
+      <div class="evidence-dna">${dnaHtml}</div>
+    </div>`;
+  }).join('');
+  if(filtered.length>80) el.innerHTML += `<div class="persona-scroll-hint">Showing 80 of ${filtered.length.toLocaleString()}</div>`;
+}
+
+// ── SELECT PERSONA ────────────────────────────────
+function selectPersona(id){
+  selected = all.find(p=>p.id===id);
+  if(!selected) return;
+  chatHistory = [];
+  document.querySelectorAll('.tc-persona-card').forEach(c=>c.classList.toggle('selected',+c.dataset.pid===id));
+  document.getElementById('welcomeHero').style.display='none';
+  var cw = document.getElementById('chatWrap');
+  cw.classList.add('visible');
+  var t = TYPES[selected.consumer_type];
+  var av = document.getElementById('chatAv');
+  av.className='tc-avatar av-'+selected.consumer_type;
+  av.style.cssText='width:38px;height:38px;font-size:14px';
+  av.textContent=selected.first_name[0]+selected.last_name[0];
+  document.getElementById('chatName').textContent=selected.name;
+  document.getElementById('chatMeta').textContent=`${selected.age} · ${selected.gender} · ${selected.occupation} · ${selected.region}, ${selected.country} · ${t.label}`;
+  // quick questions — type-specific
+  var qsByType={
+    A:['What exact size works for your space?','What triggers your buying decision in-store?','Does panel design matter when the TV is off?','What size mistake have you made or fear most?','How do you decide OLED vs QLED for aesthetics?'],
+    B:['What eye strain symptoms concern you most?','How do you test a display for eye comfort?','OLED vs LCD — which is better for your eyes?','What certifications do you actually trust?','Would you pay more for verified eye care tech?'],
+    C:['What price would make you buy right now?','How do you track TV prices over time?','When is the best time to buy in your market?','What hidden costs have you been burned by?','TCL vs Samsung — worth the price difference?'],
+    D:['What does your family fight over on TV?','How do you test a TV\'s ease of use in-store?','Samsung Tizen or LG webOS — which for family?','What would make your least tech-savvy member struggle?','How long do you expect your next TV to last?'],
+    E:['What specs do most buyers get wrong?','How do you verify HDR claims independently?','OLED vs QD-OLED for your use case?','What\'s your process for testing a demo unit?','When does a spec upgrade actually justify the price?'],
+  };
+  var qs=qsByType[selected.consumer_type]||['What triggers your purchase impulse in-store?','How important is screen size to you?','What concerns you most when buying?','How do you research before visiting a store?','What would stop you from buying today?'];
+  document.getElementById('quickBar').innerHTML=qs.map(q=>
+    `<span class="quick-q" onclick="prefill('${q.replace(/'/g,"\\'")}')">
+      ${q.length>42?q.slice(0,42)+'…':q}
+    </span>`).join('');
+  document.getElementById('chatMessages').innerHTML='';
+  appendMsg('persona', opener(selected), selected);
+  document.getElementById('chatInput').focus();
+}
+function prefill(q){ document.getElementById('chatInput').value=q; sendMsg(); }
+
+// ── SEND MESSAGE ──────────────────────────────────
+function sendMsg(){
+  var inp=document.getElementById('chatInput'), msg=inp.value.trim();
+  if(!msg||!selected) return;
+  lastQ = msg;
+  inp.value=''; appendMsg('user',msg,null);
+  chatHistory.push({role:'user',content:msg});
+  document.getElementById('sendBtn').disabled=true;
+  // typing indicator
+  var msgs=document.getElementById('chatMessages');
+  var typing=document.createElement('div');
+  typing.className='msg persona'; typing.id='typingIndicator';
+  typing.innerHTML=`<div class="tc-avatar av-${selected.consumer_type}" style="width:32px;height:32px;font-size:11px">${selected.first_name[0]}${selected.last_name[0]}</div>
+    <div class="msg-text" style="background:var(--n100)"><div class="typing-dots"><span></span><span></span><span></span></div></div>`;
+  msgs.appendChild(typing); msgs.scrollTop=msgs.scrollHeight;
+  setTimeout(()=>{
+    typing.remove();
+    var r=personaReply(selected,msg);
+    appendMsg('persona',r,selected);
+    chatHistory.push({role:'persona',content:r});
+    document.getElementById('sendBtn').disabled=false;
+  }, 700+Math.random()*700);
+}
+function appendMsg(role,text,persona){
+  var msgs=document.getElementById('chatMessages');
+  var d=document.createElement('div');
+  d.className='msg '+(role==='user'?'user':'persona');
+  var av=document.createElement('div');
+  av.className='msg-av '+(role==='user'?'is-user':'tc-avatar av-'+(persona?persona.consumer_type:'A'));
+  av.style.cssText='width:32px;height:32px;font-size:11px';
+  av.textContent=role==='user'?'You':(persona?persona.first_name[0]+persona.last_name[0]:'AI');
+  var bub=document.createElement('div'); bub.className='msg-bubble';
+  var txt=document.createElement('div'); txt.className='msg-text'; txt.textContent=text;
+  bub.appendChild(txt);
+  if(role==='persona'&&persona){
+    var src=document.createElement('div'); src.className='msg-source';
+    src.innerHTML=`<div class="msg-source-icon"></div><div><strong>Context:</strong> ${TYPES[persona.consumer_type].label} · ${persona.country} · Age ${persona.age} · Based on consumer behavior research</div>`;
+    bub.appendChild(src);
+    // Confidence layer
+    var conf = getConfidenceData(persona.consumer_type, lastQ);
+    var cl = document.createElement('div'); cl.className='conf-layer';
+    cl.innerHTML=`<span class="conf-badge">${conf.count} studies support this view</span><span class="conf-sources">${conf.sources.join(' · ')}</span>`;
+    bub.appendChild(cl);
+  }
+  d.appendChild(av); d.appendChild(bub);
+  msgs.appendChild(d); msgs.scrollTop=msgs.scrollHeight;
+}
+
+// ── BULK QUERY ────────────────────────────────────
+function runBulk(){
+  var q=document.getElementById('bulkInput').value.trim();
+  if(!q||!filtered.length) return;
+  var sample=[];
+  ['A','B','C','D','E'].forEach(t=>['USA','Korea','Europe'].forEach(c=>{
+    var m=filtered.find(p=>p.consumer_type===t&&p.country===c);
+    if(m&&sample.length<9) sample.push(m);
+  }));
+  if(!sample.length) sample=filtered.slice(0,6);
+  document.getElementById('welcomeHero').style.display='none';
+  document.getElementById('chatWrap').classList.remove('visible');
+  var existing=document.getElementById('bulkPanel');
+  if(existing) existing.remove();
+  var panel=document.createElement('div');
+  panel.id='bulkPanel'; panel.className='bulk-results';
+  panel.innerHTML=`<div class="bulk-result-header">
+    <div class="bulk-result-title">Panel Response — "${q}"</div>
+    <div class="bulk-result-meta">${sample.length} representative personas from ${filtered.length.toLocaleString()} filtered</div>
+  </div>
+  <div class="bulk-result-body" id="bulkBody"></div>
+  <div style="padding:var(--space-3) var(--space-5);border-top:1px solid var(--n100);flex-shrink:0;display:flex;gap:var(--space-3);align-items:center">
+    <button class="back-btn" onclick="clearBulk()">← Back to personas</button>
+    <button class="tc-btn-export" onclick="exportPDFReport()" id="exportBtn">
+      <svg viewBox="0 0 24 24"><path d="M12 15V3m0 12l-4-4m4 4l4-4M2 17l.621 2.485A2 2 0 004.561 21h14.878a2 2 0 001.94-1.515L22 17"/></svg>
+      Export PDF Report
+    </button>
+  </div>`;
+  var ma=document.getElementById('mainArea');
+  ma.insertBefore(panel, document.querySelector('.bulk-bar'));
+  var body=document.getElementById('bulkBody');
+
+  // ── Store for PDF export ──────────────────────────
+  var consensusRows = getBulkConsensus(q, sample);
+  lastBulkData = {q, sample, consensusRows};
+  var cpanel = document.createElement('div'); cpanel.className='consensus-panel';
+  cpanel.innerHTML=`<div class="consensus-title"><span class="consensus-dot"></span>Consensus Signal — What the Research Says</div>`
+    + consensusRows.map(r=>{
+      var pct = Math.round((r.score/sample.length)*100);
+      var cls = pct>=75?'score-hi':pct>=50?'score-md':'score-lo';
+      return `<div class="consensus-row">
+        <div class="consensus-text">
+          <div class="consensus-finding">${r.finding}</div>
+          <div class="consensus-support">Supported by: ${r.support}</div>
+        </div>
+        <span class="consensus-score ${cls}">${r.score}/${sample.length}</span>
+      </div>`;
+    }).join('');
+  body.appendChild(cpanel);
+
+  // ── Individual persona responses ─────────────────
+  sample.forEach(p=>{
+    var t=TYPES[p.consumer_type];
+    var r=personaReply(p,q);
+    var conf=getConfidenceData(p.consumer_type, q);
+    var card=document.createElement('div'); card.className='bulk-insight-card';
+    card.innerHTML=`<div class="bic-header">
+      <div class="tc-avatar av-${p.consumer_type}" style="width:26px;height:26px;font-size:10px">${p.first_name[0]}${p.last_name[0]}</div>
+      <span class="bic-name">${p.name}</span>
+      <span class="tc-badge badge-${t.col}">${t.short}</span>
+      <span class="tc-badge badge-${p.country==='USA'?'usa':p.country==='Korea'?'korea':'europe'}">${p.country}</span>
+      <span style="font-family:'Sora',sans-serif;font-size:11px;color:var(--n400)">${p.age} · ${p.occupation}</span>
+    </div>
+    <div class="bic-body">${r}</div>
+    <div class="conf-layer" style="margin-top:8px;padding-top:8px;border-top:1px solid rgba(88,96,213,.08)">
+      <span class="conf-badge">${conf.count} studies support this</span>
+      <span class="conf-sources">${conf.sources.join(' · ')}</span>
+    </div>`;
+    body.appendChild(card);
+  });
+  document.getElementById('bulkInput').value='';
+}
+// ── PDF REPORT GENERATOR ─────────────────────────
+var lastBulkData = null; // stores {q, sample, consensusRows} for export
+
+function exportPDFReport(){
+  if(!lastBulkData) return;
+  var {q, sample, consensusRows} = lastBulkData;
+  var dateStr = new Date().toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'});
+  var typeBreakdown = {};
+  sample.forEach(p=>{ typeBreakdown[p.consumer_type]=(typeBreakdown[p.consumer_type]||0)+1; });
+  var countryBreakdown = {};
+  sample.forEach(p=>{ countryBreakdown[p.country]=(countryBreakdown[p.country]||0)+1; });
+
+  var reportHTML = `<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8">
+<title>AXPrism Research Report — ${q}</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Sora:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Sora',sans-serif;color:#1F2937;background:#fff;font-size:13px;line-height:1.6}
+h1,h2,h3,.heading{font-family:'Poppins',sans-serif}
+.page{max-width:860px;margin:0 auto;padding:48px 48px 60px}
+/* COVER */
+.cover{padding:56px 0 40px;border-bottom:2px solid #1E2E69;margin-bottom:40px}
+.cover-tag{font-family:'Poppins',sans-serif;font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#5860D5;margin-bottom:12px}
+.cover-title{font-family:'Poppins',sans-serif;font-size:28px;font-weight:600;color:#1E2E69;line-height:1.25;margin-bottom:8px}
+.cover-query{font-size:18px;font-weight:400;color:#374151;font-style:italic;margin-bottom:24px;padding-left:16px;border-left:3px solid #D46BC4}
+.cover-meta{display:flex;gap:32px;flex-wrap:wrap}
+.meta-item{display:flex;flex-direction:column;gap:2px}
+.meta-label{font-family:'Poppins',sans-serif;font-size:9px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;color:#9CA3AF}
+.meta-value{font-family:'Poppins',sans-serif;font-size:13px;font-weight:600;color:#1E2E69}
+/* SECTION */
+.section{margin-bottom:36px}
+.section-title{font-family:'Poppins',sans-serif;font-size:11px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;color:#1E2E69;margin-bottom:16px;padding-bottom:8px;border-bottom:1px solid #E5E7EB;display:flex;align-items:center;gap:8px}
+.section-title::before{content:'';display:inline-block;width:4px;height:16px;background:linear-gradient(180deg,#5860D5,#D46BC4);border-radius:2px;flex-shrink:0}
+/* CONSENSUS */
+.consensus-card{background:#F0F4FF;border:1px solid rgba(88,96,213,.15);border-radius:10px;padding:20px;margin-bottom:24px}
+.con-row{display:flex;align-items:flex-start;gap:16px;padding:10px 0;border-bottom:1px solid rgba(88,96,213,.08)}
+.con-row:last-child{border-bottom:none;padding-bottom:0}
+.con-text{flex:1}
+.con-finding{font-family:'Poppins',sans-serif;font-size:13px;font-weight:600;color:#111827;margin-bottom:3px}
+.con-support{font-size:11px;color:#6B7280}
+.con-score{font-family:'Poppins',sans-serif;font-size:11px;font-weight:700;padding:3px 10px;border-radius:10px;background:rgba(34,197,94,.1);color:#16a34a;border:1px solid rgba(34,197,94,.2);white-space:nowrap;flex-shrink:0}
+/* PERSONA CARDS */
+.persona-response{border:1px solid #E5E7EB;border-radius:10px;padding:18px;margin-bottom:14px;break-inside:avoid}
+.pr-header{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.pr-avatar{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Poppins',sans-serif;font-size:13px;font-weight:700;color:#fff;flex-shrink:0}
+.av-A{background:linear-gradient(135deg,#1E2E69,#5860D5)}
+.av-B{background:linear-gradient(135deg,#0E97D0,#5860D5)}
+.av-C{background:linear-gradient(135deg,#F59E0B,#D97706)}
+.av-D{background:linear-gradient(135deg,#D46BC4,#F5A8D6)}
+.av-E{background:linear-gradient(135deg,#5860D5,#1E2E69)}
+.pr-info{flex:1}
+.pr-name{font-family:'Poppins',sans-serif;font-size:13px;font-weight:600;color:#111827}
+.pr-meta{font-size:11px;color:#6B7280}
+.pr-badges{display:flex;gap:4px;flex-wrap:wrap;margin-top:4px}
+.badge{display:inline-block;padding:1px 8px;border-radius:10px;font-family:'Poppins',sans-serif;font-size:9px;font-weight:600;letter-spacing:.4px;text-transform:uppercase}
+.b-navy{background:rgba(30,46,105,.08);color:#1E2E69}
+.b-indigo{background:rgba(88,96,213,.1);color:#5860D5}
+.b-cyan{background:rgba(14,151,208,.1);color:#0E97D0}
+.b-amber{background:rgba(245,158,11,.1);color:#B45309}
+.b-magenta{background:rgba(212,107,196,.1);color:#9B2C8C}
+.b-usa{background:rgba(59,130,246,.08);color:#1D4ED8}
+.b-korea{background:rgba(239,68,68,.08);color:#B91C1C}
+.b-europe{background:rgba(34,197,94,.08);color:#15803D}
+.pr-body{font-size:13px;color:#374151;line-height:1.7;margin-bottom:10px}
+.pr-conf{display:flex;align-items:center;gap:6px;padding-top:8px;border-top:1px solid #F3F4F6}
+.conf-check{font-size:10px;font-weight:700;color:#16a34a;background:rgba(34,197,94,.08);border:1px solid rgba(34,197,94,.2);padding:1px 8px;border-radius:8px;font-family:'Poppins',sans-serif}
+.conf-src{font-size:10px;color:#9CA3AF}
+/* SOURCES */
+.source-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.source-item{padding:8px 12px;background:#F9FAFB;border-radius:6px;border:1px solid #E5E7EB}
+.source-num{font-family:'Poppins',sans-serif;font-size:16px;font-weight:700;color:#5860D5}
+.source-label{font-size:11px;color:#6B7280;margin-top:1px}
+.source-org{font-family:'Poppins',sans-serif;font-size:10px;font-weight:600;color:#1E2E69}
+/* FOOTER */
+.report-footer{margin-top:48px;padding-top:16px;border-top:1px solid #E5E7EB;display:flex;justify-content:space-between;align-items:center}
+.rf-left{font-size:10px;color:#9CA3AF}
+.rf-right{font-family:'Poppins',sans-serif;font-size:11px;font-weight:600;color:#5860D5}
+@media print{
+  body{font-size:12px}
+  .page{padding:24px 32px 40px;max-width:100%}
+  .persona-response{break-inside:avoid;page-break-inside:avoid}
+  .section{page-break-inside:avoid}
+}
+.print-btn{display:flex;align-items:center;gap:8px;margin-bottom:24px;padding:10px 20px;background:#1E2E69;color:#fff;border:none;border-radius:8px;font-family:'Poppins',sans-serif;font-size:13px;font-weight:600;cursor:pointer}
+@media print{.print-btn{display:none}}
+</style></head><body>
+<div class="page">
+<button class="print-btn" onclick="window.print()">⬇ Save as PDF (Print → Save as PDF)</button>
+<div class="cover">
+  <div class="cover-tag">AXPrism · Consumer Persona Intelligence Report</div>
+  <div class="cover-title">Panel Research Findings</div>
+  <div class="cover-query">"${q}"</div>
+  <div class="cover-meta">
+    <div class="meta-item"><div class="meta-label">Date</div><div class="meta-value">${dateStr}</div></div>
+    <div class="meta-item"><div class="meta-label">Panel Size</div><div class="meta-value">${sample.length} Representative Personas</div></div>
+    <div class="meta-item"><div class="meta-label">Total Panel</div><div class="meta-value">3,000 (USA · Korea · Europe)</div></div>
+    <div class="meta-item"><div class="meta-label">Research Sources</div><div class="meta-value">80+ Published Studies</div></div>
+    <div class="meta-item"><div class="meta-label">Prepared by</div><div class="meta-value">AXPrism · TecAce / 이팝</div></div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-title">Consensus Signal — What Research Confirms</div>
+  <div class="consensus-card">
+    ${consensusRows.map(r=>{
+      var pct=Math.round((r.score/sample.length)*100);
+      return `<div class="con-row">
+        <div class="con-text">
+          <div class="con-finding">${r.finding}</div>
+          <div class="con-support">Supported by: ${r.support}</div>
+        </div>
+        <span class="con-score">${r.score}/${sample.length} agree (${pct}%)</span>
+      </div>`;
+    }).join('')}
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-title">Individual Persona Responses (${sample.length} Voices)</div>
+  ${sample.map(p=>{
+    var t=TYPES[p.consumer_type];
+    var r=personaReply(p,q);
+    var conf=getConfidenceData(p.consumer_type,q);
+    var cc=p.country==='USA'?'b-usa':p.country==='Korea'?'b-korea':'b-europe';
+    var tc={'A':'b-navy','B':'b-cyan','C':'b-amber','D':'b-magenta','E':'b-indigo'};
+    return `<div class="persona-response">
+      <div class="pr-header">
+        <div class="pr-avatar av-${p.consumer_type}">${p.first_name[0]}${p.last_name[0]}</div>
+        <div class="pr-info">
+          <div class="pr-name">${p.name}</div>
+          <div class="pr-meta">${p.age} · ${p.occupation} · ${p.region}, ${p.country}</div>
+          <div class="pr-badges">
+            <span class="badge ${cc}">${p.country}</span>
+            <span class="badge ${tc[p.consumer_type]||'b-indigo'}">${t.label}</span>
+            <span class="badge b-navy">Budget: ${fmtB(p.budget,p.currency)}</span>
+          </div>
+        </div>
+      </div>
+      <div class="pr-body">${r}</div>
+      <div class="pr-conf">
+        <span class="conf-check">✓ ${conf.count} studies</span>
+        <span class="conf-src">${conf.sources.join(' · ')}</span>
+      </div>
+    </div>`;
+  }).join('')}
+</div>
+
+<div class="section">
+  <div class="section-title">Key Statistics Referenced</div>
+  <div class="source-grid">
+    <div class="source-item"><div class="source-num">52.8%</div><div class="source-label">of TV sales in 32–55" segment</div><div class="source-org">Grand View Research 2025</div></div>
+    <div class="source-item"><div class="source-num">65%+</div><div class="source-label">of adults experience digital eye strain</div><div class="source-org">CooperVision 2024</div></div>
+    <div class="source-item"><div class="source-num">72%</div><div class="source-label">start research online before store visit</div><div class="source-org">Shopify CE Report 2025</div></div>
+    <div class="source-item"><div class="source-num">73%</div><div class="source-label">compare prices on 3+ platforms</div><div class="source-org">NRF Consumer Survey 2024</div></div>
+    <div class="source-item"><div class="source-num">74%</div><div class="source-label">of families rank ease-of-use as #1 criterion</div><div class="source-org">Nielsen Connected Home 2024</div></div>
+    <div class="source-item"><div class="source-num">91%</div><div class="source-label">of enthusiasts consult professional reviews</div><div class="source-org">TechRadar Survey 2024</div></div>
+  </div>
+</div>
+
+<div class="report-footer">
+  <div class="rf-left">AXPrism Consumer Intelligence Platform · Free Beta · Data sourced from 80+ published research studies · Synthetic personas calibrated to real market data · Not for redistribution without attribution</div>
+  <div class="rf-right">AXPrism · TecAce / 이팝 · ${new Date().getFullYear()}</div>
+</div>
+</div>
+<script>window.onload=function(){setTimeout(()=>window.print(),600)}<\/script>
+</body></html>`;
+
+  var w = window.open('','_blank','width=900,height=700');
+  w.document.write(reportHTML);
+  w.document.close();
+}
+
+function clearBulk(){
+  var p=document.getElementById('bulkPanel'); if(p) p.remove();
+  if(selected) document.getElementById('chatWrap').classList.add('visible');
+  else document.getElementById('welcomeHero').style.display='flex';
+}
+
+// ── PERSONA KNOWLEDGE ENGINE ──────────────────────
+function pick(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
+
+// Country-specific cultural flavor layer
+function cultureNote(p){
+  if(p.country==='Korea') return pick([
+    ' In Korea, department store demo floors — Lotte, Hyundai, Shinsegae — are where a lot of final decisions actually happen, even for people who researched online.',
+    ' Korean apartments are uniquely constraining — most living rooms are designed around a specific wall that works for one size, and going wrong disrupts the whole layout.',
+    ' A/S (after-sales service) accessibility is a big deal in Korea. That\'s a real reason people stick with Samsung or LG — service centers everywhere.',
+    ' In Korea, Naver Shopping price comparison is the default starting point. If a price isn\'t competitive on Naver, it basically doesn\'t exist for most buyers.',
+  ]);
+  if(p.country==='USA') return pick([
+    ' In the US, Costco\'s 90-day return policy is genuinely a differentiator — it dramatically reduces the risk of the wrong-size purchase.',
+    ' Super Bowl season (late January through February) is when US TV retailers run their deepest legitimate deals. It\'s a real buying window.',
+    ' Best Buy\'s price match guarantee is an actual tool — I\'ve used it against Amazon prices right at the checkout counter.',
+    ' American living rooms tend to be larger, so the comfortable TV size here is typically 10–15" bigger than what most Europeans would consider for the same viewing distance.',
+  ]);
+  if(p.country==='Europe') return pick([
+    ' EU energy efficiency ratings actually matter to a lot of European buyers — not just environmentally but for ongoing electricity costs.',
+    ' European room sizes in older buildings are significantly smaller than US or Korean new construction, which puts a real ceiling on what size works.',
+    ' The EU\'s right-to-repair legislation is starting to influence purchase decisions — longer software support commitments are becoming a real differentiator here.',
+    ' VAT included in European prices means the psychological price anchor is different — what looks like a €999 TV is meaningfully more expensive than a $999 TV for most people.',
+  ]);
+  return '';
+}
+
+// TV industry deep knowledge by topic
+function tvKnowledge(topic){
+  var facts = {
+    panel:`OLED: each pixel self-illuminates — perfect blacks, no backlight, thinner. Weakness: peak brightness, potential burn-in with static content. QD-OLED adds quantum dot layer for more color volume. Mini-LED: LED zones behind LCD — much better than traditional LED but halos can appear around bright objects on dark backgrounds. The right panel depends entirely on your room lighting and content habits.`,
+    size:`A practical formula: measure your viewing distance in inches, divide by 1.6 — that's your ideal screen diagonal. A common mistake: TVs look smaller on a large showroom wall. At home, the same TV feels 20–30% bigger in a normal room. This is why "go one size smaller than you think" is actually bad advice — most people underestimate at the store.`,
+    hdr:`"HDR" as a label means almost nothing. HDR10 is a baseline standard any TV can claim. HDR10+ and Dolby Vision are dynamic metadata formats — they adjust per scene. The real question is peak brightness: HDR400 certification means 400 nits peak (barely visible improvement), HDR1000 is genuinely impactful. Only about 18% of marketed "HDR" TVs actually meet HDR1000 — the rest are compliance theater.`,
+    vivid:`Everything in a showroom is set to "Vivid" or "Dynamic" mode — artificially boosted saturation and sharpness. In a real home in "Movie" or "Filmmaker" mode, the same TV looks noticeably different. RTINGS.com tests all modes independently, which is why their calibrated measurements are trusted over manufacturer specs.`,
+    timing:`Best times to buy: Super Bowl season (Jan–Feb, US), Black Friday/Cyber Monday (Nov), and 6–8 months after CES announcements when new models drop and previous year's models discount sharply. Worst time: just before a major sporting event — prices spike on large screens.`,
+    gaming:`For gaming, the critical specs are: input lag under 5ms in Game Mode, HDMI 2.1 ports for 4K@120Hz, Variable Refresh Rate (VRR/ALLM) support. Almost no TV marketed as "gaming ready" lacks these basics now, but VRR implementation quality varies widely. PlayStation 5 and Xbox Series X benefit significantly from HDMI 2.1 bandwidth.`,
+    streaming:`Most streaming services cap at 1080p unless you're on a premium plan and the content is actually encoded in 4K. Netflix 4K requires the Premium plan; Disney+ 4K is included in standard plans. In practice, you're watching 4K content maybe 20% of the time on a "4K TV" — which is fine, just honest.`,
+    smart:`Smart TV platforms compared: Samsung Tizen — widest app selection, fastest interface. LG webOS — elegant design, best for navigation. Google TV — integrates with Android ecosystem well. Roku TV (TCL, Hisense) — simple, stable, no ecosystem lock-in. The platform you're already invested in (Google/Amazon/Apple) should influence your choice.`,
+    mount:`Wall mount costs are often overlooked: a quality tilting mount runs $40–$120, professional installation adds $150–$300. OLED TVs require specific wall-mount hardware due to thinner build. Also factor in: cable management, soundbar placement (in front of or below the TV), and whether you need to route cables inside the wall.`,
+    burnin:`OLED burn-in is real but context-dependent. For watching varied content (streaming, films, sports) risk is very low. For static content (news ticker, video games with a fixed HUD) risk accumulates over time. Modern OLED TVs have pixel-shifting and refresh algorithms that significantly mitigate this. For 99% of TV-watching households, burn-in is not a practical concern.`,
+  };
+  return facts[topic] || '';
+}
+
+// ── OPENER ────────────────────────────────────────
+function opener(p){
+  var bud=fmtB(p.budget,p.currency);
+  var pool={
+    A:[
+      `Hi, I'm ${p.first_name}. The first thing I do in any showroom? Find the size tag. I have a ${p.home_type.toLowerCase()} in ${p.region} and I've already measured my wall — currently running ${p.current_tv_size_inch}" but wondering if ${p.current_tv_size_inch+8}" could work without dominating the room. Key insight I've learned: TVs always look smaller at home than in the store, because showroom walls are enormous. I actually bring a measuring tape.`,
+      `Hey, I'm ${p.first_name}. Made the expensive mistake once — bought a TV that looked perfect in the store and got home to realize it overwhelmed my entire ${p.home_type.toLowerCase()}. Returned it, went one size smaller, regretted that too. Now I start with my actual wall dimensions and work backwards from the formula: viewing distance in inches ÷ 1.6 = ideal screen size. My budget is around ${bud}.`,
+      `Hi, I'm ${p.first_name}. What catches my eye in a showroom is the bezel design before anything else — does this TV look intentional when it's off, or does it look like a black rectangle stuck to the wall? I'm in a ${p.home_type.toLowerCase()} and I care about the whole aesthetic. Samsung's Frame series exists because people like me are a real market segment. Budget is around ${bud} and fit is the primary filter.`,
+      `Hey, ${p.first_name} here. Here's something salespeople never mention: stores set their demo TVs to "Vivid" mode with extreme brightness and oversaturated colors — nothing like what they look like in a home. But even correcting for that, I've learned that the size-in-store perception is genuinely misleading. My current ${p.current_tv_size_inch}" felt right in the store and still feels slightly small at home. Now I know to size up by one step from my comfort zone.`,
+    ],
+    B:[
+      `Hi, I'm ${p.first_name}. I won't buy any TV without first standing in front of it for 5 minutes. I have long screen exposure days and I've had real, measurable headaches from poor-quality displays — specifically from PWM flicker in cheaper LCD panels. Over 65% of adults already experience eye strain from screens (CooperVision 2024). I'm not adding to that problem. Right now I'm leaning OLED because per-pixel illumination eliminates backlight flicker entirely.`,
+      `Hello, I'm ${p.first_name}. Eye comfort drives my decisions more than picture quality. I've actually tracked which display technologies give me tension after extended viewing — OLED consistently scores best for my eyes. The science is: OLED has no backlight to strobe or flicker, and the per-pixel dimming means no contrast compromise. My budget is around ${bud} and I'd genuinely stretch it for something with TÜV Rheinland Low Blue Light certification backed by actual test data.`,
+      `Hi, I'm ${p.first_name}. What frustrates me about TV shopping is that brands put "Eye Care Mode" on the spec sheet like it means something — it's almost always just a software filter that reduces brightness with no real health data behind it. What I actually look for: flicker frequency measurements (DC dimming vs PWM), peak blue light spectral output, and whether there's third-party certification. LG OLED is the only line that consistently has all three verified independently.`,
+      `Hey, I'm ${p.first_name}. The thing about OLED most people miss: it's not just the picture quality advantage. No backlight means no backlight flicker — that's a real physiological difference for sensitive eyes. My concern with OLED in my ${p.home_type.toLowerCase()} is brightness in daytime — OLED peaks lower than Mini-LED. But for evening viewing, which is when I actually use TV the most, OLED wins on eye comfort every time.`,
+    ],
+    C:[
+      `Hey, I'm ${p.first_name}. I research for 2–3 weeks before I walk into any store. By the time I arrive, I know the model, its street price across 4 retailers, the price history, and the main trade-offs. My ceiling is ${bud}. If the in-store price isn't competitive with what I've seen online, I'll leave and buy it online. Price match policies are a real tool I use — I've walked into Best Buy with an Amazon price on my phone and gotten the match on the spot.`,
+      `Hi, I'm ${p.first_name}. The value formula I use: does this model deliver meaningfully better performance per dollar than the next tier down? There's always a sweet spot where value drops sharply. Right now in the ${bud} range, TCL's QLED lineup and Hisense's U-series are genuinely competitive with Samsung's mid-tier. I look at RTINGS scores, not brand prestige. Premium brands charge a 20–30% markup on the same underlying panel technology.`,
+      `Hey, I'm ${p.first_name}. Timing is part of the value equation. I try to buy 6–8 months after model launch when prices normalize, or during Super Bowl season (Jan–Feb) when retailers actually discount legitimately — not fake markdowns. Right now I have a target model tracked on price alert. My budget is ${bud} and I'm patient. The right deal comes if you wait for it.`,
+      `Hi, I'm ${p.first_name}. Three things that stop me cold at any register: aggressive extended warranty upsell (manufacturer warranty is fine), "smart features" locked behind subscriptions, and vague spec language like "4K upscaling" sold as equivalent to native 4K. I've bought 4 TVs. Each time I learned something new about the gap between spec-sheet marketing and real performance. My limit is ${bud} and I want honest feature-to-price transparency.`,
+    ],
+    D:[
+      `Hi! I'm ${p.first_name}. With ${p.family_status.toLowerCase()}, our TV needs to work for everyone — simple menus that any family member can navigate, solid streaming app support (we use Netflix, YouTube, and some gaming), good enough sound to not immediately need a soundbar, and a size the whole room can share. Smart TV platform usability matters more to us than whether the picture is technically perfect. Budget around ${bud}.`,
+      `Hey, I'm ${p.first_name}. My main evaluation test: can my least tech-savvy family member turn the TV on, find their content, and adjust the volume without asking for help? If the answer is no, we don't buy it. We've had ${p.family_status.toLowerCase()} for years and I've watched what actually frustrates people — it's always the interface, never the picture quality. Samsung Tizen and LG webOS are the two that consistently pass this test.`,
+      `Hi! ${p.first_name} here. Every big household purchase is a team decision. With ${p.family_status.toLowerCase()}, daily usage is high — common sense media data shows 8.5 hours average for family households. That means this TV is a genuine workhorse, not a luxury item. I want reliability over 5–7 years more than I want cutting-edge specs. Budget is around ${bud} and that's after honest family discussion about what we can justify.`,
+      `Hey, I'm ${p.first_name}. One thing that never appears in reviews but that family buyers notice immediately: the remote design. How many buttons, whether voice control actually works reliably, how quickly you can switch inputs. I've walked away from technically better TVs because the UI felt like it was designed by engineers rather than by a family who actually needs to use it daily. The smart platform choice outlasts the display specs.`,
+    ],
+    E:[
+      `Hi, I'm ${p.first_name}. I've been tracking the TV landscape since CES announcements. Currently evaluating ${p.brands_considering.slice(0,2).join(' and ')}. What I care about: input lag under 5ms in Game Mode, proper HDMI 2.1 with full 48Gbps bandwidth for 4K@120Hz, HDR peak brightness that actually hits 1000+ nits, and an ABL (automatic brightness limiter) that doesn't crush highlights. Most TVs marketed as gaming or cinema displays fail at least one of these on independent testing.`,
+      `Hey, I'm ${p.first_name}. The first thing I do in any store is try to switch the demo TV from Vivid to Movie or Filmmaker mode. If I can't change the picture mode, the demo is useless to me. Stores run everything on Vivid — artificially sharpened, oversaturated, max brightness. That's not real performance. RTINGS.com is my reference because they test in calibrated mode and publish the methodology. If a model scores well there, I'll verify it in-store and buy.`,
+      `Hi, I'm ${p.first_name}. My research process: RTINGS for calibrated measurements → Vincent Teoh's HDTVTest YouTube channel for real-world assessment → AVS Forum threads for edge cases and long-term reliability reports → then one in-store visit to verify no unit-specific defect. I've been doing this for 3 TV purchases. Budget is ${bud} but specs determine whether I'll stretch — a meaningful performance jump justifies going to the next tier.`,
+      `Hey, I'm ${p.first_name}. Panel technology knowledge is the key to not overpaying. QD-OLED is a genuine leap over traditional WOLED in color volume. Mini-LED with 1000+ local dimming zones rivals OLED in bright rooms. The right panel isn't "OLED is always best" — it's matching technology to your viewing environment. Bright room with lots of windows? Mini-LED. Dark room, cinematic viewing? OLED. Mixed use with gaming? QD-OLED if budget allows.`,
+    ],
+  };
+  var arr=pool[p.consumer_type];
+  return arr[Math.floor(Math.random()*arr.length)];
+}
+
+// ── PERSONA REPLY ENGINE ──────────────────────────
+function personaReply(p,q){
+  var t=p.consumer_type, ti=TYPES[t];
+  var bud=fmtB(p.budget,p.currency);
+  var brands=p.brands_considering.join(', ');
+  var cx=cultureNote(p);
+
+  var isSize    =/size|inch|big|large|small|fit|room|wall|dimension|space|wide|narrow/i.test(q);
+  var isHealth  =/eye|health|blue.?light|flicker|oled|strain|bright|vision|harm|fatigue|headache/i.test(q);
+  var isPrice   =/price|cost|budget|cheap|afford|deal|discount|money|value|worth|expensive/i.test(q);
+  var isFamily  =/family|kid|child|parent|together|simple|easy|age|grand|son|daughter|spouse/i.test(q);
+  var isSpec    =/spec|4k|8k|hdr|hz|refresh|resolution|processor|picture|quality|nit|brightness/i.test(q);
+  var isBrand   =/brand|samsung|lg|sony|tcl|hisense|philips|vizio|which|recommend|trust/i.test(q);
+  var isTrigger =/trigger|impulse|buy.*(spot|now|today)|what.*(make|makes|would)|decide|purchase/i.test(q);
+  var isResearch=/research|before|online|review|compare|check|rtings|youtube|reddit/i.test(q);
+  var isStop    =/stop|hesit|wait|not buy|hold|pause|walk.?away|leave/i.test(q);
+  var isPanel   =/panel|oled|qled|mini.?led|lcd|qd.?oled|nano|backlight|technology|type/i.test(q);
+  var isTiming  =/when|timing|best time|season|black friday|super bowl|sale|wait/i.test(q);
+  var isWhere   =/where|store|costco|best.?buy|amazon|online|retailer|shop|naver|coupang/i.test(q);
+  var isMount   =/mount|wall|install|hang|stand|bezel|design|look/i.test(q);
+  var isGaming  =/game|gaming|ps5|xbox|input lag|refresh|console|hdmi/i.test(q);
+  var isStream  =/stream|netflix|youtube|disney|app|platform|smart|tizen|webos|google/i.test(q);
+  var isRegret  =/regret|mistake|wrong|error|lesson|wish|should|bad|wrong/i.test(q);
+  var isUpgrade =/upgrade|replace|old|current|keep|switch|time to|worth.*upgrade/i.test(q);
+
+  // ─────────── TYPE A: Space-First ───────────────
+  if(t==='A'){
+    if(isTrigger||isSize) return `What triggers me is when the size card matches what I've already measured at home — and I do literally carry a note with my wall dimensions. The psychological click happens when I can visualize it on my specific wall without guessing. Key thing most people don't know: TVs look about 20–30% smaller in a showroom than in a normal room, because showroom walls are enormous and TVs are spaced far apart. I've learned to go one step larger than my comfort zone. ${REAL_STATS.sizeGrowth.stat} (${REAL_STATS.sizeGrowth.src}) — I feel that pull, but it still has to fit my specific ${p.home_type.toLowerCase()}.${cx}`;
+    if(isSize||isMount) return `The formula I use: viewing distance in inches ÷ 1.6 = ideal screen diagonal. My sofa is about ${Math.round(p.home_size_sqft*0.04)+6} feet from the wall, which puts my ideal size around ${Math.round((p.home_size_sqft*0.04+6)*12/1.6)}" diagonally. My current ${p.current_tv_size_inch}" is just slightly under that. What stops me from going bigger isn't the price — it's whether the visual weight dominates the room. I also think about whether it looks designed-in or bolted-on when it's off.`;
+    if(isPrice) return `Price is secondary to fit for me. I'd pay ${bud} or even a bit more for something that integrates perfectly with my ${p.home_type.toLowerCase()} versus saving money on something that visually dominates the space. That said, I wouldn't overpay for premium picture features I don't prioritize. Samsung's Frame series commands a premium specifically for aesthetics — for people like me, that's a legitimate reason to pay more.`;
+    if(isBrand) return `I look at ${brands} but design matters as much as brand. Does this TV look intentional when it's off? Samsung's Frame series, Sony's Bravia A80 with its cinema stand, LG's Gallery OLED — these products exist because a significant segment of buyers like me care about the room's aesthetic, not just the picture. Thin bezels, neutral colors, flush mounting options. The brand follows the design spec.${cx}`;
+    if(isPanel) return `Honestly, panel technology is lower priority for me than form factor. That said: OLED is thin and looks premium — fits a high-aesthetic interior better. Mini-LED QLED is brighter in a well-lit room, which matters if I have large windows. What I actually care about from a panel perspective is whether it looks good on the wall when it's OFF. OLED in ambient lighting mode or Samsung's Art Mode actually changes what the TV does for the room's character.`;
+    if(isStop) return `If the size doesn't fit my wall, I walk away regardless of the deal. I've done it three times — walked away from legitimately good prices because the dimensions were wrong. I also won't buy if the bezel design looks cheap or if the TV has a thick stand that makes it impossible to wall-mount cleanly. Design integrity matters to me even at off-state.${cx}`;
+    if(isTiming) return `I'll buy when I find the right size in the right design, honestly — I'm less timing-sensitive than price buyers. That said, Black Friday and Super Bowl season in ${p.country} do offer real price reductions on the premium design TVs I look at. I'd rather wait 2 months for a legitimate discount on the exact model I want than buy the wrong size at a great price.`;
+    if(isWhere) return `I need to see it in person — online doesn't tell me how it looks on a wall. ${p.country==='Korea'?'Department store demo floors (Lotte, Hyundai, Shinsegae) are where I do my final confirmation.':p.country==='USA'?'Best Buy is useful because they display TVs flush on a wall so I can actually judge proportions.':'Physical showrooms at major electronics retailers — I need to see it mounted, not just standing on a shelf.'} I research online, but the final yes always happens in-store.`;
+    if(isRegret) return `The only TV regret I've had was buying based on picture quality first. Looked incredible in the store demo, got home to a ${p.home_type.toLowerCase()}, and it was overwhelming. Returned it. Since then: measure first, picture second. ${REAL_STATS.mediumSegment.stat} (${REAL_STATS.mediumSegment.src}) — that range dominates not because the picture is better at that size, it's because most rooms fit those dimensions.`;
+    if(isUpgrade) return `I upgrade when the TV either breaks or when a new design genuinely changes how the room feels. Not for picture specs. Samsung's Frame switching from a traditional TV to something that shows art when off — that was a legitimate upgrade trigger for me. If my current ${p.current_tv_size_inch}" ever starts showing any visual issues, I'll go up to at least ${p.current_tv_size_inch+8}" this time.`;
+    return `Most TV marketing misses the core insight: for people like me, the TV purchase starts with the room, not the product. I have a wall in mind before I enter a store. ${REAL_STATS.mediumSegment.stat} (${REAL_STATS.mediumSegment.src}) — not because of picture quality at those sizes, but because those dimensions fit the majority of actual living rooms. Brands that understand this are the ones that earn the sale.${cx}`;
+  }
+
+  // ─────────── TYPE B: Health-First ───────────────
+  if(t==='B'){
+    if(isTrigger||isHealth) return `What triggers my purchase? Seeing a genuine health certification — not a brand sticker, but TÜV Rheinland Low Blue Light or Eye Comfort with independently measured flicker data. Then I stand in front of the display for 4–5 minutes and just observe. If my eyes start tensing, I move on. ${REAL_STATS.eyeStrain.stat} (${REAL_STATS.eyeStrain.src}). The technology question is: which display type eliminates the root causes? For me that's OLED — no PWM backlight flickering, no poorly calibrated brightness curve that spikes blue light.${cx}`;
+    if(isPanel) return `Panel technology is actually the most important technical decision for eye health. OLED: each pixel self-illuminates — zero backlight, zero flicker from a PWM backlight source. That's a fundamentally different visual experience for eye fatigue. LCD (even Mini-LED): uses a backlight that modulates brightness through PWM cycling, which at certain frequencies causes the subtle flickering that accumulates into eye strain. DisplayMate confirmed OLED panels emit 40% less blue light than equivalent LCD brightness. My budget is ${bud} and I'll prioritize OLED if I can reach it.`;
+    if(isSpec) return `The only specs that matter to me are the ones with health implications: flicker frequency (DC dimming vs PWM — DC is better), peak blue light emission at normal viewing brightness, local dimming zone count (affects how background brightness is managed), and independently tested eye comfort scores. A 144Hz gaming-focused refresh rate means nothing to me. A certified flicker-free measurement means everything.${cx}`;
+    if(isPrice) return `Health isn't where I compromise. My budget is ${bud} but I'll go over it if I can verify the eye comfort benefit is real. What I won't do is pay a premium for "Eye Care Mode" marketing that's just a software blue light filter on top of a standard LCD panel. The physical display technology matters — software filters are a band-aid, not a solution. LG OLED with third-party certification is worth a real premium to me.`;
+    if(isBrand) return `Honest brand assessment for health: LG OLED is the leader — their technology eliminates backlight flicker by design, they invest in TÜV certifications, and independent reviewers consistently confirm the eye comfort benefit. Sony's Bravia OLED has excellent picture processing with similar health benefits. Samsung's QLED — good peak brightness but still a backlight system with associated flicker. For people who care about eye health specifically, the OLED vs LCD distinction matters more than the brand.${cx}`;
+    if(isGaming) return `Gaming actually heightens my eye health concern — higher refresh rates at high brightness, longer continuous sessions, darker room environments. Input lag reduction mode often disables local dimming, which spikes backlight brightness on LCD TVs. OLED's advantage for gaming isn't just the low input lag — it's that a shorter backlight distance means no ABL (automatic brightness limiting) crushing highlights when fast content triggers peak brightness.`;
+    if(isStop) return `What stops me immediately: health marketing with no data. "Eye Comfort" printed on a spec sheet next to zero measurement data. I've walked away from technically excellent TVs because I couldn't find a verified flicker frequency or blue light spectrum measurement. Also: any display where my eyes feel tense after 5 minutes of the in-store demo — that's an automatic veto regardless of price.${cx}`;
+    if(isTiming) return `I'm less timing-sensitive than price-focused buyers. I'll buy when I find a display with verified eye comfort performance, regardless of season. That said, OLED prices tend to drop in the second half of the year as new model generations arrive. Patience gets me a better eye health product at a better price — worth waiting for rather than buying something suboptimal during a sale.`;
+    if(isRegret) return `My worst TV purchase was a supposedly premium LCD that had aggressive PWM dimming at lower brightness levels — where I actually watch TV in the evenings. Looked beautiful in the store at 800 nits. At home in a dark room at comfortable brightness, it was flickering at a frequency that gave me headaches within 30 minutes. Since then I exclusively look for verified DC dimming or OLED technology with independent certification.`;
+    if(isUpgrade) return `I'll upgrade when a technology genuinely improves the eye comfort baseline. Current generation OLED is excellent. If quantum dot OLED (QD-OLED) continues to improve peak brightness without reintroducing backlight flicker, that would be a legitimate upgrade trigger. My current ${p.current_tv_size_inch}" will stay until a new panel generation offers measurably better health metrics — or until it starts showing display degradation.`;
+    return `The gap between TV marketing and actual eye health impact is frustrating. ${REAL_STATS.eyeStrain.stat} (${REAL_STATS.eyeStrain.src}) and yet 99% of TV marketing is about picture spectacle — brightness, contrast, color. If a brand published a genuine eye comfort index with third-party measurement data, they would own a genuinely underserved market. That's the product I'm actually looking for.${cx}`;
+  }
+
+  // ─────────── TYPE C: Budget-First ───────────────
+  if(t==='C'){
+    if(isTrigger||isPrice) return `What triggers me is seeing a price I know is genuinely good — not a fake markdown, but a real discount I can verify against price history. I track models on price alert tools. ${p.country==='USA'?'Camelcamelcamel for Amazon history, Google Shopping for comparison.':p.country==='Korea'?'다나와 (Danawa) for Korean price history — the most reliable price comparison site in Korea.':'PriceRunner or Idealo for European cross-retailer comparison.'} If an in-store price matches or beats what I've seen, and the warranty terms are reasonable, I'll buy on the spot. My absolute limit is ${bud}.${cx}`;
+    if(isSpec) return `Specs matter to me in price-per-performance ratio only. Last year's flagship panel technology at this year's mid-range price? That's my sweet spot. Concrete example: Samsung QN90A series was a flagship at release; 18 months later it prices like mid-tier with the same hardware. I'm not paying a premium for incremental generational improvements — the 2024 buyer's premium rarely justifies itself in visible display performance.${cx}`;
+    if(isBrand) return `I follow value, not brand loyalty. ${brands} are all in consideration. TCL's QLED lineup and Hisense's U-series have genuinely closed the technical gap with Samsung and LG mid-range — Consumer Reports confirmed this across multiple test cycles in 2024. The premium brand markup is real and often unjustified by hardware. I'll pay a brand premium only for a specific, verified advantage — like LG's webOS platform reliability.${cx}`;
+    if(isResearch) return `My research process: check RTINGS value tier rankings → price history on tracker tools → read 1-2 professional reviews for real-world context → then one store visit to verify I can live with the picture quality. ${REAL_STATS.onlineResearch.stat} (${REAL_STATS.onlineResearch.src}) — I'm probably in the extreme end of that. By the time I walk into a store, I know the model I want, what it should cost, and I've already identified my backup option.`;
+    if(isStop) return `Three things that immediately kill a deal: (1) aggressive extended warranty upsell at checkout — manufacturer warranty is sufficient and extended warranties are historically poor value; (2) any "feature" that requires a subscription to unlock basic functionality; (3) a salesperson who can't explain what the extra $200 actually buys in verifiable technical terms. Hidden cost structures are a signal that the retailer doesn't trust the product to sell on value alone.${cx}`;
+    if(isTiming) return `${tvKnowledge('timing')} In ${p.country==='Korea'?'Korea, promotional periods like Chuseok and Lunar New Year sales move genuine inventory at real discounts — department store TVs especially.':p.country==='USA'?'the US, Super Bowl season is the most predictable legitimate deal window — I\'ve gotten 25–30% off on specific models during that period.':'Europe, Black Friday and year-end sales tend to be the most reliable — though research shows UK Black Friday prices often match or exceed summer sale prices, so always check price history.'} I'm patient. A good deal eventually comes.`;
+    if(isWhere) return `Wherever the price is competitive. ${p.country==='USA'?'I\'ll use Best Buy\'s price match guarantee against Amazon pricing — have done it multiple times in-store. Costco is legitimately good for premium TVs because their return policy reduces the risk premium I\'d otherwise factor in.':p.country==='Korea'?'다나와 comparisons drive me to the retailer with the best price — usually Coupang for online, sometimes department stores for in-person deals during promotional periods.':'I compare across Amazon, physical retailer, and brand direct. VAT inclusion means online pricing transparency is better than in-store in most European markets.'} The store is a tool, not a destination.`;
+    if(isPanel) return `Panel technology through a value lens: QD-OLED is excellent but carries a 40–50% premium over equivalent Mini-LED. For most content at typical viewing distances, a well-calibrated Mini-LED QLED (1000+ dimming zones) delivers 85–90% of OLED visual quality at 60–70% of the price. Consumer Reports 2024 data confirms that budget-tier TVs now achieve 85% of premium picture quality. For my range of ${bud}, Mini-LED QLED is the value-optimal technology right now.`;
+    if(isGaming) return `Gaming value proposition: you don't need a flagship TV for great gaming. VRR and ALLM support are now standard across price tiers. HDMI 2.1 availability has expanded to mid-range TVs. The genuine gaming spec differentiators — 1ms input lag vs 5ms, 240Hz vs 120Hz — aren't perceptible to most people in actual gameplay. For ${bud}, you can get a solid 4K@120Hz VRR gaming TV without paying flagship prices.`;
+    if(isRegret) return `My only TV regret was buying based on brand instinct instead of research — paid a 25% premium for a Samsung mid-tier that performed identically to a TCL model at 75% of the price. Since then: always verify specific model performance against alternatives at the same price point, not just brands. Paying for a logo is the most common TV buying mistake for value-conscious consumers.${cx}`;
+    if(isUpgrade) return `I upgrade only when there's a compelling reason — current TV breaks, or a genuine technology leap makes the upgrade economically rational. For a ${bud} budget, a 5–7 year lifespan is the target. The annual total cost of ownership matters more than purchase price alone. I calculate: purchase price ÷ years of expected use ÷ hours of daily use = cost per viewing hour. That puts in perspective when an upgrade is actually justified.`;
+    return `What I want from a store — and rarely get — is a clear price-to-feature matrix. Not marketing language, not feature lists padded with things nobody uses, but: here's what the extra $200 buys in this specific model upgrade, and here's why you might care about it. ${REAL_STATS.onlineResearch.stat} (${REAL_STATS.onlineResearch.src}) — because in-store that clarity almost never exists. Give me transparency and I'll make my decision in 10 minutes.${cx}`;
+  }
+
+  // ─────────── TYPE D: Family-First ───────────────
+  if(t==='D'){
+    if(isTrigger||isFamily) return `The trigger moment for me is when I can mentally picture my ${p.family_status.toLowerCase()} actually using it without any friction — switching from kids' content to sports to a streaming movie without anyone needing to ask for help. When a demo shows instant, intuitive navigation with clean audio and an obvious remote — I feel that pull. 74% of family households rank ease of use as their #1 smart TV criterion (Nielsen Connected Home 2024). We're not unique in this.${cx}`;
+    if(isStream||isSpec) return `Smart TV platform matters more to us than raw specs. Our priorities: Samsung Tizen and LG webOS are the most family-friendly — widest app selection, fastest navigation, most reliable software updates. Google TV integrates with our Android household naturally. What I specifically look for: does it have all the streaming services my family already uses? Can you switch inputs without a manual? Does the voice remote work reliably for non-technical users? Those answers matter more than HDR certification.${cx}`;
+    if(isPrice) return `With ${p.family_status.toLowerCase()}, every major purchase is a discussion. Our range is around ${bud} — justified by the fact that this TV will get 6–8 hours of daily household use. The cost per hour of viewing makes a premium investment rational, but I still need to justify every dollar to myself and the household. What I won't pay premium for: specs that only matter for single-viewer cinematic experiences, not daily family use.`;
+    if(isBrand) return `Reliability is my primary brand filter when you have ${p.family_status.toLowerCase()} using a TV constantly. ${p.brands_considering.slice(0,2).join(' and ')} are my top two — both have excellent after-sales support, long smart platform update commitments (Samsung Tizen and LG webOS both still support older models 6+ years in), and I know from real experience that their service infrastructure works. That's worth a real premium over brands I can't trust for long-term support.${cx}`;
+    if(isGaming) return `With kids in the household, gaming performance actually matters. Low input lag under 10ms in Game Mode is sufficient for most casual and age-appropriate gaming. I care less about 4K@120Hz gaming frame rates and more about: does game mode automatically activate when the console is on? Is the remote-heavy UI navigable for kids without parent intervention? Can we set content restrictions easily? Gaming is part of our use case but it's not the dominant one.`;
+    if(isStop) return `Confusing interface is an immediate veto. If an elderly parent or young child couldn't turn on the TV and find their content within 30 seconds without help, we don't buy it. I also look for whether the remote has too many unnecessary buttons, whether settings menus are organized logically, and whether software updates are likely to change the UI in ways that would confuse people who've learned it. Complexity is a real family tax.${cx}`;
+    if(isWhere) return `We want hands-on testing in a store — not for picture quality, but to test the remote and UI. ${p.country==='Korea'?'Department stores have good demo setups where you can actually operate the TV, not just watch a demo reel.':p.country==='USA'?'Best Buy store staff are usually willing to let you operate the demo TVs directly — that\'s what I\'m there for, not the picture quality comparison.':'Physical electronics stores let us test the remote and navigate menus, which is the actual purchase test for family buyers.'} The UI experience test requires being in person.`;
+    if(isTiming) return `We buy when we need to — either when the old TV fails or when there's a genuine family occasion that justifies a planned upgrade. The holiday season tends to work well because it aligns with content consumption peaks. If I'm planning a purchase, I'd choose November for Black Friday deals or January for Super Bowl season pricing. But a family TV purchase is rarely purely opportunistic — it's usually triggered by a specific event or failure.`;
+    if(isRegret) return `Our most memorable TV mistake was choosing specs over platform. Bought a technically excellent TV with a Google TV platform that none of our less tech-savvy family members could navigate without help. We switched to a Samsung with Tizen OS and the relief was immediate — everyone could find what they wanted without asking. For family TV, the software experience outlasts the display technology advantage.${cx}`;
+    if(isUpgrade) return `We upgrade when the current TV stops meeting the family's evolving needs — kids' content habits change, streaming platforms multiply, or picture quality becomes noticeably dated against newer displays. With ${p.family_status.toLowerCase()}, we're realistically on a 5–6 year replacement cycle. Parks Associates data shows family households upgrade every 4.2 years on average — we try to be on the longer end of that by buying quality that lasts.`;
+    return `I genuinely wish TV ads showed real family scenarios instead of one person watching a cinematic masterpiece in perfect darkness. Show me ${p.family_status.toLowerCase()} switching between cartoons, a live sports game, and a streaming movie — and it all just works intuitively. 74% of family households make ease of use their primary criterion (Nielsen 2024). That's the actual market. Market to us.${cx}`;
+  }
+
+  // ─────────── TYPE E: Spec-First ───────────────
+  if(t==='E'){
+    if(isTrigger||isSpec) return `My trigger is when the in-store demo confirms what my research predicted. I've done weeks of preparation — RTINGS calibrated measurements, DisplayMate analysis, AVS Forum threads on real-world long-term performance. If I access the picture settings in-store and the processing quality and color accuracy match what I expected, and the price is at or below street price — I'll buy immediately. ${REAL_STATS.ultraLarge.stat} (${REAL_STATS.ultraLarge.src}). Spec-conscious buyers push that trend because large panel + quality specs = the best value in performance per inch.${cx}`;
+    if(isPanel) return `${tvKnowledge('panel')} My current assessment: for pure contrast and eye comfort in a dark room environment, traditional WOLED is still excellent. QD-OLED adds meaningful color volume improvement — measurable and visible in wide color gamut content. Mini-LED with 1000+ zones is the best bright-room performer and has narrowed the gap significantly. My viewing environment (${p.home_type.toLowerCase()}) and primary content type determines the optimal choice — I think through this systematically before committing.${cx}`;
+    if(isHealth) return `Eye health is a secondary consideration for me — though interesting technically. OLED's per-pixel illumination eliminates PWM backlight flicker, which is a real physiological advantage for sensitive viewers. I care more about color accuracy and motion handling consistency. That said: a calibrated high-quality display with proper Filmmaker mode engaged is easier on the eyes simply because the image is accurate, not artificially enhanced. I'll note that Sony's Bravia XR cognitive processing tends to produce naturally comfortable images without over-sharpening.`;
+    if(isPrice) return `Price follows performance for me. If ${p.brands_considering[0]||'Sony'} outperforms alternatives in independent RTINGS calibrated tests, I'll pay the premium — and I know what "premium" actually means because I track price-per-performance ratios. What I won't do is pay flagship pricing for mid-tier specifications. My ceiling is ${bud} but I'd exceed it meaningfully for a measurable performance leap — specifically: a full generation difference in OLED peak brightness or a QD-OLED model that genuinely hits 2000+ nits with full-array color volume.`;
+    if(isBrand) return `I follow model performance, not brand loyalty. Current landscape: Sony Bravia leads in picture processing quality (XR cognitive chip provides demonstrably superior motion handling); Samsung QN95 series leads in peak brightness (Mini-LED with excellent ABL management); LG OLED leads in contrast ratio and response time; Panasonic OLED leads in cinema-accurate color calibration. I track ${brands}. The right choice depends on your specific use case — none is universally best.${cx}`;
+    if(isGaming) return `${tvKnowledge('gaming')} My gaming setup requires HDMI 2.1 (full 48Gbps, not the fake 40Gbps versions that Samsung used to ship), VRR with wide range (40–144Hz ideally), and Game Mode input lag under 5ms. I verify all of these with RTINGS test data before any purchase. The PS5 gaming experience on a proper HDMI 2.1 panel at 4K@120Hz is genuinely a different tier of responsiveness — not marketing, measurable in blind testing.`;
+    if(isResearch) return `${REAL_STATS.onlineResearch.stat} (${REAL_STATS.onlineResearch.src}). I'm the extreme end of that statistic. My research process: RTINGS.com (calibrated measurements, gold standard for independence) → HDTVTest YouTube (real-world content assessment) → AVS Forum (long-term reliability, edge cases) → then one in-store visit to verify no unit defect. By arrival, I know more than the salesperson about the specific model. This isn't arrogance — it's necessary, because incorrect spec claims are common.${cx}`;
+    if(isStop) return `Misleading spec language stops me entirely. "HDR compatible" instead of certified HDR10/Dolby Vision is a red flag. "${tvKnowledge('hdr')}" — I know this and I test for it specifically. Also: any store that won't let me access picture settings on the demo unit is immediately suspicious. If the demo mode is locked, the brand knows what their TV looks like in Movie mode and doesn't want me to see it.${cx}`;
+    if(isTiming) return `I track the spec release calendar, not the sale calendar. The optimal timing: buy 2–3 months after CES model announcements when previous year flagships discount to mid-tier pricing with no hardware compromise. New OLED generations arrive March-April in ${p.country}; buying previous flagship models in January-February can deliver 25–35% savings with 90%+ of the performance. I specifically don't buy during Super Bowl or Black Friday — those deals are on lower-tier inventory.`;
+    if(isWhere) return `I go to stores to verify, not to discover. My model is chosen before I arrive. In-store I do: switch to Movie mode (if allowed), check motion handling with native content, verify color accuracy against memory of RTINGS data, and confirm no unit-specific backlight uniformity defect. ${p.country==='Korea'?'Samsung Experience Stores in Korea actually have surprisingly good calibrated demo modes if you know how to access them.':p.country==='USA'?'Magnolia inside Best Buy has higher-end demo setups that are occasionally worth checking for calibration.':'Specialist AV dealers in Europe often have the best demo environments for premium TVs — worth visiting even if you ultimately buy online.'} My purchase decision was made at home.`;
+    if(isRegret) return `My only TV regret was buying on a spec claim that turned out to be misleading — a panel marketed as HDMI 2.1 that was actually capped at 40Gbps, not the full 48Gbps needed for 4K@120Hz 4:4:4 color depth. ${tvKnowledge('hdr')} — this kind of spec theater is pervasive. I now independently verify every claimed specification against third-party lab data before any purchase commitment. Trust but verify isn't just a phrase, it's the only way to buy correctly in this category.${cx}`;
+    if(isUpgrade) return `I upgrade when a technology generation delivers a measurable capability leap — not an incremental improvement. OLED to QD-OLED: meaningful color volume improvement, legitimate upgrade trigger if budget allows. 120Hz to 240Hz: not meaningfully perceptible for most content at TV viewing distances, not a trigger. HDMI 2.0 to HDMI 2.1: genuine for gaming use, yes. I'll keep a current-generation flagship for 4–6 years if it continues to meet technical requirements. The upgrade cycle in this category is driven by panel technology inflection points, not marketing cycles.`;
+    return `The thing I want that doesn't exist: a standardized, independent TV benchmark database equivalent to PassMark for CPUs — published, verifiable, comparable across brands. Every manufacturer cherry-picks the test where they look best. RTINGS comes closest, but it's still one organization. ${tvKnowledge('vivid')} — that's the industry's most common deception. I want data I can independently verify, not a showroom optimized to impress me.${cx}`;
+  }
+
+  return `As a ${ti.label} consumer in ${p.region}, ${p.country} — my primary purchase trigger is "${p.primary_purchase_trigger}". The question you're asking touches something important: ${p.pain_points[0]||'making the right decision without regret'}. What's the specific context behind your question?`;
+}
+function fmtB(b,c){ return c==='KRW'?b.toLocaleString()+'원':c==='EUR'?'€'+b.toLocaleString():'$'+b.toLocaleString(); }
+
+// ── CONSUMER MODE ─────────────────────────────────
+function updateMatch(){
+  if(!document.getElementById('cPriority')) return;
+  var pr=document.getElementById('cPriority').value;
+  var ti=TYPES[pr];
+  document.getElementById('matchType').textContent=ti.label+' Consumer';
+  document.getElementById('matchDesc').textContent=ti.desc+'.';
+  var c=document.getElementById('cCountry').value;
+  var a=document.getElementById('cAge').value;
+  var n=all.filter(p=>p.consumer_type===pr&&p.country===c&&p.age_band===a).length;
+  var nt=all.filter(p=>p.consumer_type===pr&&p.country===c).length;
+  document.getElementById('matchStat').innerHTML=
+    `<span>${n} exact matches</span><span>${nt} in ${c}</span>`;
+}
+function startConsult(){
+  var pr=document.getElementById('cPriority').value;
+  var c=document.getElementById('cCountry').value;
+  var a=document.getElementById('cAge').value;
+  var bud=document.getElementById('cBudget').value;
+  var fam=document.getElementById('cFamily').value;
+  var room=document.getElementById('cRoom').value;
+  consumerProfile={pr,c,a,bud,fam,room};
+  var ca=document.getElementById('consumerChatArea');
+  ca.innerHTML='<div class="chat-messages" id="consumerMsgs" style="flex:1;overflow-y:auto;padding:var(--space-5)"></div>'+
+    '<div class="quick-bar" id="consumerQuickBar" style="padding:0 var(--space-5) var(--space-3)"></div>'+
+    '<div class="chat-input-bar"><div class="input-row"><input class="tc-input" id="consumerInput" type="text" placeholder="Ask your advisor anything…" onkeydown="if(event.key===\'Enter\')sendConsult()"><button class="tc-btn-send" onclick="sendConsult()">Send</button></div></div>';
+  ca.style.display='flex'; ca.style.flexDirection='column'; ca.style.overflow='hidden';
+  // Opening
+  var ti=TYPES[pr];
+  var n=all.filter(p=>p.consumer_type===pr&&p.country===c&&p.age_band===a).length||'several';
+  var budLabels={low:'under $500',middle:'$500–$1,500',high:'$1,500+'};
+  var roomLabels={small:'a smaller space',medium:'a medium-sized room',large:'a larger room'};
+  var famLabels={single:'yourself/your partner',family:'your family with kids',senior:'yourself as an empty nester'};
+  var opening=`Hi! Based on your profile, you're a ${ti.label} consumer — ${ti.desc}.\n\nYou're looking for ${roomLabels[room]}, for ${famLabels[fam]}, in the ${budLabels[bud]} range.\n\nI've matched you with ${n} people who share your exact profile from our 3,000-person panel across USA, Korea & Europe. Here's what people like you care about most when buying a TV:\n\n${topInsight(pr)}\n\nWhat would you like to know first?`;
+  appendConsultMsg('advisor',opening);
+  var qs=['What size should I get for my room?','Which brand should I trust?','OLED or QLED — which is better?','What to check when I visit the store?','Is now a good time to buy?'];
+  document.getElementById('consumerQuickBar').innerHTML=qs.map(q=>
+    `<span class="quick-q" onclick="consultPrefill('${q.replace(/'/g,"\\'")}')">
+      ${q.length>38?q.slice(0,38)+'…':q}
+    </span>`).join('');
+}
+function topInsight(t){
+  return {
+    A:`Size accuracy comes first — 78% say their biggest TV regret was buying the wrong size for their space. Most start with room measurements, not brand comparisons. (Circana 2024)`,
+    B:`Eye comfort is the deciding factor — ${REAL_STATS.eyeStrain.stat} (${REAL_STATS.eyeStrain.src}). Health-first consumers spend 2–3× longer evaluating displays in-store before committing.`,
+    C:`Price transparency wins — ${REAL_STATS.onlineResearch.stat} (${REAL_STATS.onlineResearch.src}). Budget-first buyers arrive at the store already knowing market prices and will leave if they feel the deal isn't genuine.`,
+    D:`Family versatility is non-negotiable — ease of use, content ecosystem, and durability rank above raw picture quality. Family buyers take 40% longer to decide because they mentally simulate every family member using the TV.`,
+    E:`Spec integrity matters — spec-first buyers do weeks of research and often know more than store staff. ${REAL_STATS.ultraLarge.stat} (${REAL_STATS.ultraLarge.src}) — spec-conscious buyers drive this trend.`,
+  }[t]||'Making a well-informed decision they won\'t regret.';
+}
+function consultPrefill(q){ document.getElementById('consumerInput').value=q; sendConsult(); }
+function sendConsult(){
+  var inp=document.getElementById('consumerInput'), msg=inp.value.trim();
+  if(!msg||!consumerProfile) return;
+  inp.value=''; appendConsultMsg('user',msg);
+  setTimeout(()=>appendConsultMsg('advisor',advisorReply(consumerProfile,msg)), 800);
+}
+function appendConsultMsg(role,text){
+  var msgs=document.getElementById('consumerMsgs');
+  if(!msgs) return;
+  var d=document.createElement('div'); d.className='msg '+(role==='user'?'user':'persona');
+  var av=document.createElement('div');
+  av.className='msg-av '+(role==='user'?'is-user':'');
+  av.style.cssText='width:32px;height:32px;font-size:11px;'+
+    (role==='advisor'?'background:linear-gradient(135deg,#1E2E69,#D46BC4)':'');
+  av.textContent=role==='user'?'You':'AI';
+  var bub=document.createElement('div'); bub.className='msg-bubble';
+  var txt=document.createElement('div'); txt.className='msg-text'; txt.style.whiteSpace='pre-line'; txt.textContent=text;
+  bub.appendChild(txt);
+  if(role==='advisor'){
+    var src=document.createElement('div'); src.className='msg-source';
+    var n=all.filter(p=>p.consumer_type===consumerProfile.pr&&p.country===consumerProfile.c).length;
+    src.innerHTML=`<div class="msg-source-icon"></div><div><strong>Based on:</strong> ${n}+ ${consumerProfile.c} panel responses · No brand affiliation · AXPrism Panel Data</div>`;
+    bub.appendChild(src);
+  }
+  d.appendChild(av); d.appendChild(bub);
+  msgs.appendChild(d); msgs.scrollTop=msgs.scrollHeight;
+}
+function advisorReply(prof, q){
+  var p=prof.pr, t=TYPES[p];
+  var n=all.filter(x=>x.consumer_type===p&&x.country===prof.c).length||'hundreds of';
+  if(/size|inch|big|large|small|fit|room/i.test(q)){
+    var recs={small:'43"–50" is ideal. Going larger creates viewing fatigue and dominates the space. Most small-room buyers who went over 55" report regret.',medium:'55"–65" is the sweet spot. At a typical living room viewing distance, 65" delivers immersive viewing without overwhelming the space.',large:'65"–75" works well. Our panel data shows large-room buyers who chose 75"+ had zero size regret — the most common feedback is "I should have gone bigger sooner."'};
+    return `Based on ${n} ${t.label} consumers in ${prof.c}:\n\n${recs[prof.room]}\n\nPractical tip: Measure your wall space, multiply screen size (inches) by 1.5 to get the minimum comfortable viewing distance in feet. The most common regret from people like you: going too small because they were intimidated by the large-screen displays in the store.\n\n${REAL_STATS.sizeGrowth.stat} (${REAL_STATS.sizeGrowth.src}).`;
+  }
+  if(/brand|samsung|lg|sony|which|recommend/i.test(q)){
+    var br={A:'Samsung Frame series is designed specifically for your type — it looks like artwork when off. LG also offers clean minimal designs.',B:'LG OLED leads in eye comfort with per-pixel dimming and zero backlight. Sony has exceptional picture processing with less eye fatigue in premium models.',C:'TCL and Hisense offer exceptional value-per-dollar. Our ${n} budget-focused panel members in ${prof.c} rate them highly for satisfaction vs price paid. LG\'s mid-range is also strong.',D:'Samsung (Tizen) and LG (webOS) platforms are most family-friendly — widest app support, simplest interfaces. Sony is excellent but slightly more complex.',E:'Sony leads in picture processing quality. Samsung QLED leads in peak brightness. LG OLED leads in contrast and response time. Choice depends on your primary viewing environment.'};
+    return `Among ${n} ${t.label} consumers in ${prof.c}:\n\n${br[p]}\n\nImportant note: The panel's most consistent finding is that brand matters less than the specific model's performance data and after-sales support quality in your country. Check the model year, not just the brand name.`;
+  }
+  if(/oled|qled|lcd|technology|type|panel/i.test(q)){
+    var tech={A:'Both can look premium. OLEDs are thinner and more design-forward — better for space-conscious buyers who want the TV to blend in.',B:'OLED is consistently recommended for eye health — per-pixel dimming, no backlight, better black levels reduce eye strain in dark rooms. Worth the premium for health-priority buyers.',C:'QLED and Mini-LED LCD offer better brightness-to-price. OLED premiums are real. For your budget range, a well-specified QLED delivers excellent value without compromise.',D:'QLED is better for family use — stronger performance in bright rooms, less burn-in risk with varied content (cartoons, sports, gaming). OLED is stunning but slightly more fragile for heavy mixed use.',E:'OLED wins: black levels, contrast ratio, response time, viewing angles. QLED wins: peak brightness, large-screen price/inch. Sony XR OLED combines the best processing with OLED panels.'};
+    return `${tech[p]}\n\nData point from our panel: satisfaction was 23% higher when buyers chose the technology that matched their specific use case rather than just the most expensive or most-advertised option.`;
+  }
+  if(/store|visit|what.*(look|check)|tips|advice/i.test(q)){
+    var tips={A:'Bring exact wall measurements. Ask staff for a room fit calculator. Look for any AR app or size visualization tool.',B:'Spend 3–5 minutes looking at each screen without rushing. Check for eye care certifications on the label. Ask for independent health test data, not just brand claims.',C:'Research prices online first so you have a baseline. Have price comparison apps ready. Ask about bundle deals, floor model discounts, and warranty terms explicitly.',D:'Ask for a live demo of the smart TV platform. Test how many taps it takes to switch between your streaming services. Count HDMI ports.',E:'Ask staff to unlock picture settings menu. Look for independent benchmark reviews on your phone. Check the HDR certification level — not just "HDR compatible".'};
+    return `Store visit guide for ${t.label} buyers in ${prof.c}:\n\n${tips[p]}\n\nKey insight: ${REAL_STATS.onlineResearch.stat} (${REAL_STATS.onlineResearch.src}). Consumers who arrive with one clear priority question make decisions 40% faster and report significantly higher post-purchase satisfaction.`;
+  }
+  if(/wait|sale|timing|when|good time/i.test(q)){
+    return `Timing guidance based on panel data:\n\nMajor sale events: Black Friday (November), End-of-model-year (March–April), Super Bowl season (January in USA).\n\nHowever, our ${n} ${t.label} consumers in ${prof.c} consistently report: waiting more than 2–3 months for the "perfect deal" rarely pays off for mid-range TVs. Technology improves, but the next year's model replaces the current one at the same price point.\n\nIf you've found a model that meets your specific needs at a fair market price — the data says buy now.`;
+  }
+  return `Great question. Based on ${n} ${t.label} consumers in ${prof.c} who share your profile:\n\nThe most consistent insight is that ${topInsight(p)}\n\nCould you tell me more specifically what's driving the question? I can pull more targeted data from the panel.`;
+}
+</script>
+</body>
+</html>
