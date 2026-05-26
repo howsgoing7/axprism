@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -79,6 +79,13 @@ h1,h2,h3,.heading{font-family:'Poppins',sans-serif}
 .nav-pill:hover{background:var(--tc-bg-pale);border-color:var(--tc-indigo)}
 .nav-pill.solid{background:var(--tc-navy);color:#fff;border-color:var(--tc-navy)}
 .nav-pill.solid:hover{background:var(--tc-navy-light)}
+.lang-toggle{
+  font-weight:700; letter-spacing:.5px; font-size:11px;
+  min-width:38px; text-align:center;
+  border-color:var(--tc-indigo); color:var(--tc-indigo);
+  transition:all .2s;
+}
+.lang-toggle:hover{background:var(--tc-indigo);color:#fff;border-color:var(--tc-indigo)}
 .nav-stat{
   font-family:'Poppins',sans-serif; font-size:11px; color:var(--n500);
   padding:5px 12px; border-radius:20px; border:1px solid var(--n200);
@@ -629,7 +636,7 @@ h1,h2,h3,.heading{font-family:'Poppins',sans-serif}
 <!-- ── BETA BANNER ─────────────────────────────── -->
 <div class="beta-banner" id="betaBanner">
   <span class="beta-pill">BETA</span>
-  <span>AXPrism is in <strong>free public beta</strong> — all features open. Powered by 3,000 synthetic consumer personas × 80+ real research studies.</span>
+  <span id="betaBannerText" data-ko="AXPrism 무료 공개 베타 — 모든 기능 오픈. 3,000명 합성 소비자 페르소나 × 80개+ 실제 연구 데이터 기반." data-en="AXPrism is in free public beta — all features open. Powered by 3,000 synthetic consumer personas × 80+ real research studies.">AXPrism 무료 공개 베타 — 모든 기능 오픈. 3,000명 합성 소비자 페르소나 × 80개+ 실제 연구 데이터 기반.</span>
   <button class="beta-banner-close" onclick="document.getElementById('betaBanner').style.display='none'">×</button>
 </div>
 
@@ -641,13 +648,14 @@ h1,h2,h3,.heading{font-family:'Poppins',sans-serif}
     <span class="nav-beta">BETA</span>
   </div>
   <div class="nav-modes">
-    <button class="mode-btn active" id="researchBtn" onclick="setMode('research')">Research</button>
-    <button class="mode-btn" id="consumerBtn" onclick="setMode('consumer')">Consumer</button>
+    <button class="mode-btn active" id="researchBtn" onclick="setMode('research')" data-ko="리서치" data-en="Research">리서치</button>
+    <button class="mode-btn" id="consumerBtn" onclick="setMode('consumer')" data-ko="소비자 모드" data-en="Consumer">소비자 모드</button>
   </div>
   <div class="nav-right">
-    <div class="nav-stat">Panel: <strong id="filteredCount">3,000</strong></div>
-    <button class="nav-pill" id="sourcesBtn" onclick="toggleTrustPanel()">Data Sources</button>
-    <button class="nav-pill solid" onclick="toggleTheme()" id="themeBtn">Theme</button>
+    <div class="nav-stat" id="panelStatLabel">패널: <strong id="filteredCount">3,000</strong></div>
+    <button class="nav-pill" id="sourcesBtn" onclick="toggleTrustPanel()" data-ko="데이터 출처" data-en="Data Sources">데이터 출처</button>
+    <button class="nav-pill solid" onclick="toggleTheme()" id="themeBtn" data-ko="테마" data-en="Theme">테마</button>
+    <button class="nav-pill lang-toggle" id="langBtn" onclick="switchLang()">EN</button>
   </div>
 </nav>
 
@@ -659,34 +667,34 @@ h1,h2,h3,.heading{font-family:'Poppins',sans-serif}
   <!-- SIDEBAR -->
   <aside class="tc-sidebar">
     <div class="sidebar-header">
-      <div class="sidebar-section-title">Persona Panel</div>
+      <div class="sidebar-section-title" data-ko="소비자 패널" data-en="Persona Panel">소비자 패널</div>
       <div class="search-wrap">
-        <input class="tc-search" type="text" placeholder="Search name, job, region…" id="searchInput" oninput="applyFilters()">
+        <input class="tc-search" type="text" placeholder="이름, 직업, 지역 검색…" data-ko-ph="이름, 직업, 지역 검색…" data-en-ph="Search name, job, region…" id="searchInput" oninput="applyFilters()">
       </div>
       <div class="filter-row">
-        <span class="filter-label">Country</span>
+        <span class="filter-label" data-ko="국가" data-en="Country">국가</span>
         <div class="chip-group">
-          <span class="tc-chip active" data-filter="country" data-val="all" onclick="toggleChip(this)">All</span>
+          <span class="tc-chip active" data-filter="country" data-val="all" onclick="toggleChip(this)" data-ko="전체" data-en="All">전체</span>
           <span class="tc-chip" data-filter="country" data-val="USA" onclick="toggleChip(this)">USA</span>
-          <span class="tc-chip" data-filter="country" data-val="Korea" onclick="toggleChip(this)">Korea</span>
-          <span class="tc-chip" data-filter="country" data-val="Europe" onclick="toggleChip(this)">Europe</span>
+          <span class="tc-chip" data-filter="country" data-val="Korea" onclick="toggleChip(this)">한국</span>
+          <span class="tc-chip" data-filter="country" data-val="Europe" onclick="toggleChip(this)" data-ko="유럽" data-en="Europe">유럽</span>
         </div>
       </div>
       <div class="filter-row">
-        <span class="filter-label">Consumer Type</span>
+        <span class="filter-label" data-ko="소비자 유형" data-en="Consumer Type">소비자 유형</span>
         <div class="chip-group">
-          <span class="tc-chip active" data-filter="type" data-val="all" onclick="toggleChip(this)">All</span>
-          <span class="tc-chip" data-filter="type" data-val="A" onclick="toggleChip(this)">Space</span>
-          <span class="tc-chip" data-filter="type" data-val="B" onclick="toggleChip(this)">Health</span>
-          <span class="tc-chip" data-filter="type" data-val="C" onclick="toggleChip(this)">Budget</span>
-          <span class="tc-chip" data-filter="type" data-val="D" onclick="toggleChip(this)">Family</span>
-          <span class="tc-chip" data-filter="type" data-val="E" onclick="toggleChip(this)">Spec</span>
+          <span class="tc-chip active" data-filter="type" data-val="all" onclick="toggleChip(this)" data-ko="전체" data-en="All">전체</span>
+          <span class="tc-chip" data-filter="type" data-val="A" onclick="toggleChip(this)" data-ko="공간중심" data-en="Space">공간중심</span>
+          <span class="tc-chip" data-filter="type" data-val="B" onclick="toggleChip(this)" data-ko="건강중심" data-en="Health">건강중심</span>
+          <span class="tc-chip" data-filter="type" data-val="C" onclick="toggleChip(this)" data-ko="가격중심" data-en="Budget">가격중심</span>
+          <span class="tc-chip" data-filter="type" data-val="D" onclick="toggleChip(this)" data-ko="가족중심" data-en="Family">가족중심</span>
+          <span class="tc-chip" data-filter="type" data-val="E" onclick="toggleChip(this)" data-ko="스펙중심" data-en="Spec">스펙중심</span>
         </div>
       </div>
       <div class="filter-row">
-        <span class="filter-label">Age</span>
+        <span class="filter-label" data-ko="나이" data-en="Age">나이</span>
         <div class="chip-group">
-          <span class="tc-chip active" data-filter="age" data-val="all" onclick="toggleChip(this)">All</span>
+          <span class="tc-chip active" data-filter="age" data-val="all" onclick="toggleChip(this)" data-ko="전체" data-en="All">전체</span>
           <span class="tc-chip" data-filter="age" data-val="25-34" onclick="toggleChip(this)">25–34</span>
           <span class="tc-chip" data-filter="age" data-val="35-44" onclick="toggleChip(this)">35–44</span>
           <span class="tc-chip" data-filter="age" data-val="45-54" onclick="toggleChip(this)">45–54</span>
@@ -695,17 +703,17 @@ h1,h2,h3,.heading{font-family:'Poppins',sans-serif}
         </div>
       </div>
       <div class="filter-row" style="margin-bottom:0">
-        <span class="filter-label">Gender</span>
+        <span class="filter-label" data-ko="성별" data-en="Gender">성별</span>
         <div class="chip-group">
-          <span class="tc-chip active" data-filter="gender" data-val="all" onclick="toggleChip(this)">All</span>
-          <span class="tc-chip" data-filter="gender" data-val="Male" onclick="toggleChip(this)">Male</span>
-          <span class="tc-chip" data-filter="gender" data-val="Female" onclick="toggleChip(this)">Female</span>
+          <span class="tc-chip active" data-filter="gender" data-val="all" onclick="toggleChip(this)" data-ko="전체" data-en="All">전체</span>
+          <span class="tc-chip" data-filter="gender" data-val="Male" onclick="toggleChip(this)" data-ko="남성" data-en="Male">남성</span>
+          <span class="tc-chip" data-filter="gender" data-val="Female" onclick="toggleChip(this)" data-ko="여성" data-en="Female">여성</span>
         </div>
       </div>
     </div>
     <div class="persona-list" id="personaList">
       <div style="padding:24px;text-align:center;color:var(--n400);font-family:'Sora',sans-serif;font-size:12px">
-        Loading panel data…
+        데이터 로딩 중…
       </div>
     </div>
   </aside>
@@ -715,31 +723,29 @@ h1,h2,h3,.heading{font-family:'Poppins',sans-serif}
 
     <!-- WELCOME STATE -->
     <div class="welcome-hero" id="welcomeHero">
-      <div class="welcome-badge">AXPrism · Consumer Intelligence</div>
-      <div class="welcome-title">
-        Understand what <strong>really</strong> drives<br>TV purchase decisions
+      <div class="welcome-badge" data-ko="AXPrism · 소비자 인텔리전스" data-en="AXPrism · Consumer Intelligence">AXPrism · 소비자 인텔리전스</div>
+      <div class="welcome-title" data-ko="TV 구매 결정의 <strong>진짜</strong> 이유를<br>파악하세요" data-en="Understand what <strong>really</strong> drives<br>TV purchase decisions">
+        TV 구매 결정의 <strong>진짜</strong> 이유를<br>파악하세요
       </div>
-      <p class="welcome-desc">
-        3,000 synthetic consumers across USA, Korea &amp; Europe —
-        built on public market research, consumer review analysis, and behavioral science.
-        Select any persona to begin an interview.
+      <p class="welcome-desc" data-ko="미국·한국·유럽 3,000명의 합성 소비자 데이터 — 공개 시장 리서치, 소비자 리뷰 분석, 행동과학을 기반으로 구축되었습니다. 페르소나를 선택해 인터뷰를 시작하세요." data-en="3,000 synthetic consumers across USA, Korea &amp; Europe — built on public market research, consumer review analysis, and behavioral science. Select any persona to begin an interview.">
+        미국·한국·유럽 3,000명의 합성 소비자 데이터 — 공개 시장 리서치, 소비자 리뷰 분석, 행동과학을 기반으로 구축되었습니다. 페르소나를 선택해 인터뷰를 시작하세요.
       </p>
       <div class="welcome-stats">
         <div class="welcome-stat">
           <div class="ws-num">3,000</div>
-          <div class="ws-label">Consumer Profiles</div>
+          <div class="ws-label" data-ko="소비자 프로필" data-en="Consumer Profiles">소비자 프로필</div>
         </div>
         <div class="welcome-stat">
           <div class="ws-num">3</div>
-          <div class="ws-label">Markets</div>
+          <div class="ws-label" data-ko="시장" data-en="Markets">시장</div>
         </div>
         <div class="welcome-stat">
           <div class="ws-num">5</div>
-          <div class="ws-label">Persona Types</div>
+          <div class="ws-label" data-ko="페르소나 유형" data-en="Persona Types">페르소나 유형</div>
         </div>
         <div class="welcome-stat">
           <div class="ws-num">12+</div>
-          <div class="ws-label">Data Sources</div>
+          <div class="ws-label" data-ko="데이터 출처" data-en="Data Sources">데이터 출처</div>
         </div>
       </div>
     </div>
@@ -754,7 +760,7 @@ h1,h2,h3,.heading{font-family:'Poppins',sans-serif}
         </div>
         <div class="trust-pill">
           <div class="trust-dot"></div>
-          Data-Verified
+          <span data-ko="데이터 검증됨" data-en="Data-Verified">데이터 검증됨</span>
         </div>
       </div>
       <div class="chat-messages" id="chatMessages"></div>
@@ -762,20 +768,24 @@ h1,h2,h3,.heading{font-family:'Poppins',sans-serif}
       <div class="chat-input-bar">
         <div class="input-row">
           <input class="tc-input" id="chatInput" type="text"
-            placeholder="Ask about their TV buying behavior…"
+            placeholder="TV 구매 행동에 대해 질문하세요…"
+            data-ko-ph="TV 구매 행동에 대해 질문하세요…"
+            data-en-ph="Ask about their TV buying behavior…"
             onkeydown="if(event.key==='Enter')sendMsg()">
-          <button class="tc-btn-send" id="sendBtn" onclick="sendMsg()">Send</button>
+          <button class="tc-btn-send" id="sendBtn" onclick="sendMsg()" data-ko="전송" data-en="Send">전송</button>
         </div>
       </div>
     </div>
 
     <!-- BULK BAR -->
     <div class="bulk-bar">
-      <div class="bulk-label">Ask <em id="bulkCount">3,000</em> personas:</div>
+      <div class="bulk-label" id="bulkLabel"><em id="bulkCount">3,000</em>명 페르소나에게 질문:</div>
       <input class="tc-input" id="bulkInput" style="flex:1;height:36px;border-radius:18px"
-        type="text" placeholder="e.g. What would make you buy a TV on the spot?"
+        type="text" placeholder="예: TV 매장에서 가장 먼저 눈이 가는 곳이 어디야?"
+        data-ko-ph="예: TV 매장에서 가장 먼저 눈이 가는 곳이 어디야?"
+        data-en-ph="e.g. What would make you buy a TV on the spot?"
         onkeydown="if(event.key==='Enter')runBulk()">
-      <button class="tc-btn-bulk" onclick="runBulk()">Ask All Filtered</button>
+      <button class="tc-btn-bulk" onclick="runBulk()" data-ko="전체 질문하기" data-en="Ask All Filtered">전체 질문하기</button>
     </div>
   </div>
 
@@ -1077,25 +1087,47 @@ function getBulkConsensus(q, personas){
   var isBrand   = /brand|samsung|lg|sony|which|recommend/i.test(q);
   var isSpec    = /spec|4k|8k|hdr|hz|refresh|resolution/i.test(q);
 
-  if(isSize||isTrigger)
-    rows.push({ finding:'Room fit and size accuracy ranked #1 concern across all consumer types', support:'Circana · Nielsen · J.D. Power · Houzz', score:Math.round(n*.78) });
-  if(isTrigger||isStore)
-    rows.push({ finding:'In-store impulse triggered by confirmation of pre-formed decision, not new info', support:'Deloitte CX · Accenture · GfK', score:Math.round(n*.75) });
-  if(isPrice||isTrigger)
-    rows.push({ finding:'Price transparency is more persuasive than discounts alone', support:'NRF · KPMG · Consumer Reports · Trustpilot', score:Math.round(n*.82) });
-  if(isHealth)
-    rows.push({ finding:'Eye comfort features influence purchase far more than brand marketing suggests', support:'CooperVision · AAO · Harvard Health · DisplayMate', score:Math.round(n*.71) });
-  if(isResearch||isTrigger)
-    rows.push({ finding:'72%+ start research online — in-store visit is confirmation, not discovery', support:'Shopify CE · Accenture · NRF · Statista', score:Math.round(n*.80) });
-  if(isBrand)
-    rows.push({ finding:'Specific model performance matters more than brand name for final decision', support:'J.D. Power · Consumer Reports · TechRadar', score:Math.round(n*.69) });
-  if(isSpec)
-    rows.push({ finding:'Only 18% of "HDR" TVs meet real certification — spec claims inflate perceived value', support:'DisplayHDR · DisplayMate · TechRadar', score:Math.round(n*.77) });
-  if(!rows.length)
-    rows = [
-      { finding:'All types prioritize trust over brand prestige in final decision', support:'Circana · Nielsen · J.D. Power', score:Math.round(n*.78) },
-      { finding:'Post-purchase satisfaction correlates most with expectation accuracy, not price paid', support:'Consumer Reports · GfK · Parks Associates', score:Math.round(n*.71) },
-    ];
+  if(uiLang==='ko'){
+    if(isSize||isTrigger)
+      rows.push({ finding:'공간 적합성과 정확한 사이즈 파악이 전 소비자 유형에서 1순위 고민', support:'Circana · Nielsen · J.D. Power · Houzz', score:Math.round(n*.78) });
+    if(isTrigger||isStore)
+      rows.push({ finding:'매장 충동구매는 새 정보가 아닌 이미 형성된 결정의 확인에서 비롯됨', support:'Deloitte CX · Accenture · GfK', score:Math.round(n*.75) });
+    if(isPrice||isTrigger)
+      rows.push({ finding:'가격 투명성이 단순 할인보다 구매 설득력이 더 높음', support:'NRF · KPMG · Consumer Reports · Trustpilot', score:Math.round(n*.82) });
+    if(isHealth)
+      rows.push({ finding:'눈 편안함 기능이 브랜드 마케팅 예상보다 구매 결정에 훨씬 큰 영향을 줌', support:'CooperVision · AAO · Harvard Health · DisplayMate', score:Math.round(n*.71) });
+    if(isResearch||isTrigger)
+      rows.push({ finding:'72%+ 이상이 온라인으로 먼저 리서치 — 매장 방문은 확인 단계', support:'Shopify CE · Accenture · NRF · Statista', score:Math.round(n*.80) });
+    if(isBrand)
+      rows.push({ finding:'최종 결정에서 브랜드보다 특정 모델 성능이 더 중요', support:'J.D. Power · Consumer Reports · TechRadar', score:Math.round(n*.69) });
+    if(isSpec)
+      rows.push({ finding:'시중 TV의 18%만 실제 HDR 인증 충족 — 스펙 과장이 체감 가치를 부풀림', support:'DisplayHDR · DisplayMate · TechRadar', score:Math.round(n*.77) });
+    if(!rows.length)
+      rows = [
+        { finding:'모든 유형이 최종 결정에서 브랜드 명성보다 신뢰를 우선시함', support:'Circana · Nielsen · J.D. Power', score:Math.round(n*.78) },
+        { finding:'구매 후 만족도는 지불 금액보다 기대치 정확도와 가장 높은 상관관계', support:'Consumer Reports · GfK · Parks Associates', score:Math.round(n*.71) },
+      ];
+  } else {
+    if(isSize||isTrigger)
+      rows.push({ finding:'Room fit and size accuracy ranked #1 concern across all consumer types', support:'Circana · Nielsen · J.D. Power · Houzz', score:Math.round(n*.78) });
+    if(isTrigger||isStore)
+      rows.push({ finding:'In-store impulse triggered by confirmation of pre-formed decision, not new info', support:'Deloitte CX · Accenture · GfK', score:Math.round(n*.75) });
+    if(isPrice||isTrigger)
+      rows.push({ finding:'Price transparency is more persuasive than discounts alone', support:'NRF · KPMG · Consumer Reports · Trustpilot', score:Math.round(n*.82) });
+    if(isHealth)
+      rows.push({ finding:'Eye comfort features influence purchase far more than brand marketing suggests', support:'CooperVision · AAO · Harvard Health · DisplayMate', score:Math.round(n*.71) });
+    if(isResearch||isTrigger)
+      rows.push({ finding:'72%+ start research online — in-store visit is confirmation, not discovery', support:'Shopify CE · Accenture · NRF · Statista', score:Math.round(n*.80) });
+    if(isBrand)
+      rows.push({ finding:'Specific model performance matters more than brand name for final decision', support:'J.D. Power · Consumer Reports · TechRadar', score:Math.round(n*.69) });
+    if(isSpec)
+      rows.push({ finding:'Only 18% of "HDR" TVs meet real certification — spec claims inflate perceived value', support:'DisplayHDR · DisplayMate · TechRadar', score:Math.round(n*.77) });
+    if(!rows.length)
+      rows = [
+        { finding:'All types prioritize trust over brand prestige in final decision', support:'Circana · Nielsen · J.D. Power', score:Math.round(n*.78) },
+        { finding:'Post-purchase satisfaction correlates most with expectation accuracy, not price paid', support:'Consumer Reports · GfK · Parks Associates', score:Math.round(n*.71) },
+      ];
+  }
   return rows.slice(0,3);
 }
 
@@ -1115,13 +1147,56 @@ var trustPanelOpen = false;
 var consumerProfile = null;
 var lastQ = '';
 
+// ── LANGUAGE TOGGLE ────────────────────────────────
+var uiLang = 'ko';
+function switchLang(){
+  uiLang = uiLang === 'ko' ? 'en' : 'ko';
+  var btn = document.getElementById('langBtn');
+  btn.textContent = uiLang === 'ko' ? 'EN' : 'KO';
+  btn.style.background = uiLang === 'en' ? 'var(--tc-indigo)' : '';
+  btn.style.color = uiLang === 'en' ? '#fff' : '';
+  btn.style.borderColor = uiLang === 'en' ? 'var(--tc-indigo)' : '';
+
+  // Swap text content for all [data-ko] / [data-en] elements
+  document.querySelectorAll('[data-ko]').forEach(function(el){
+    var val = uiLang === 'ko' ? el.getAttribute('data-ko') : el.getAttribute('data-en');
+    if(val) el.innerHTML = val;
+  });
+
+  // Swap placeholders
+  document.querySelectorAll('[data-ko-ph]').forEach(function(el){
+    el.placeholder = uiLang === 'ko' ? el.getAttribute('data-ko-ph') : el.getAttribute('data-en-ph');
+  });
+
+  // Panel stat label
+  var panelLabel = document.getElementById('panelStatLabel');
+  if(panelLabel){
+    var cnt = document.getElementById('filteredCount').textContent;
+    panelLabel.innerHTML = uiLang === 'ko'
+      ? '패널: <strong id="filteredCount">'+cnt+'</strong>'
+      : 'Panel: <strong id="filteredCount">'+cnt+'</strong>';
+  }
+
+  // Bulk label
+  var bulkLabel = document.getElementById('bulkLabel');
+  if(bulkLabel){
+    var bc = document.getElementById('bulkCount').textContent;
+    bulkLabel.innerHTML = uiLang === 'ko'
+      ? '<em id="bulkCount">'+bc+'</em>명 페르소나에게 질문:'
+      : 'Ask <em id="bulkCount">'+bc+'</em> personas:';
+  }
+
+  // Quick prompts — re-render if persona selected
+  if(selected) renderQuickPrompts(selected);
+}
+
 // ── THEME ─────────────────────────────────────────
 var darkMode = false;
 function toggleTheme(){
   darkMode = !darkMode;
   document.body.style.background = darkMode ? '#0f111a' : '';
   document.body.style.color = darkMode ? '#d1d5db' : '';
-  document.getElementById('themeBtn').textContent = darkMode ? 'Light' : 'Theme';
+  document.getElementById('themeBtn').textContent = darkMode ? (uiLang==='ko'?'라이트':'Light') : (uiLang==='ko'?'테마':'Theme');
 }
 
 // ── MODE ──────────────────────────────────────────
@@ -1151,7 +1226,7 @@ fetch('axprism_personas.json')
   })
   .catch(()=>{
     document.getElementById('personaList').innerHTML =
-      '<div style="padding:20px;text-align:center;font-family:\'Sora\',sans-serif;font-size:12px;color:var(--n400)">Place axprism_personas.json<br>in the same folder as this file.</div>';
+      '<div style="padding:20px;text-align:center;font-family:\'Sora\',sans-serif;font-size:12px;color:var(--n400)">axprism_personas.json 파일을<br>같은 폴더에 넣어주세요.</div>';
   });
 
 // ── FILTERS ───────────────────────────────────────
@@ -1223,22 +1298,33 @@ function selectPersona(id){
   av.textContent=selected.first_name[0]+selected.last_name[0];
   document.getElementById('chatName').textContent=selected.name;
   document.getElementById('chatMeta').textContent=`${selected.age} · ${selected.gender} · ${selected.occupation} · ${selected.region}, ${selected.country} · ${t.label}`;
-  // quick questions — type-specific
-  var qsByType={
+  document.getElementById('chatMessages').innerHTML='';
+  renderQuickPrompts(selected);
+  appendMsg('persona', opener(selected), selected);
+  document.getElementById('chatInput').focus();
+}
+function renderQuickPrompts(p){
+  var qsByType_ko={
+    A:['우리 거실에 맞는 정확한 사이즈가 뭐야?','매장에서 뭘 보면 바로 사고 싶어지는 거야?','꺼져 있을 때 디자인도 중요해?','사이즈 선택 실수한 적 있어?','OLED vs QLED 인테리어로는 어떤 게 나아?'],
+    B:['눈이 가장 불편한 증상이 뭐야?','매장에서 눈 편한 화면 어떻게 테스트해?','OLED vs LCD — 눈 건강엔 어떤 게 더 나아?','어떤 인증 마크가 진짜 믿을 만해?','눈 건강 기능 있으면 더 비싼 거 살 의향 있어?'],
+    C:['지금 당장 살 만한 가격대가 얼마야?','TV 가격 변동을 어떻게 추적해?','언제 사는 게 제일 싸?','생각지 못한 추가 비용에 당한 적 있어?','TCL vs 삼성 — 가격 차이 낼 가치 있어?'],
+    D:['가족끼리 TV 채널 싸운 적 있어?','매장에서 사용 편의성 어떻게 테스트해?','삼성 Tizen vs LG webOS — 가족용으로 어디가 나아?','제일 기계치인 가족도 쉽게 쓸 수 있어?','다음 TV는 얼마나 오래 쓸 생각이야?'],
+    E:['대부분 소비자가 놓치는 스펙이 뭐야?','HDR 스펙 광고 진위를 어떻게 직접 확인해?','내 용도엔 OLED vs QD-OLED 어떤 게 나아?','매장에서 데모 제품 테스트 방법이 뭐야?','스펙 업그레이드가 가격 차이를 정당화할 때는?'],
+  };
+  var qsByType_en={
     A:['What exact size works for your space?','What triggers your buying decision in-store?','Does panel design matter when the TV is off?','What size mistake have you made or fear most?','How do you decide OLED vs QLED for aesthetics?'],
     B:['What eye strain symptoms concern you most?','How do you test a display for eye comfort?','OLED vs LCD — which is better for your eyes?','What certifications do you actually trust?','Would you pay more for verified eye care tech?'],
     C:['What price would make you buy right now?','How do you track TV prices over time?','When is the best time to buy in your market?','What hidden costs have you been burned by?','TCL vs Samsung — worth the price difference?'],
     D:['What does your family fight over on TV?','How do you test a TV\'s ease of use in-store?','Samsung Tizen or LG webOS — which for family?','What would make your least tech-savvy member struggle?','How long do you expect your next TV to last?'],
     E:['What specs do most buyers get wrong?','How do you verify HDR claims independently?','OLED vs QD-OLED for your use case?','What\'s your process for testing a demo unit?','When does a spec upgrade actually justify the price?'],
   };
-  var qs=qsByType[selected.consumer_type]||['What triggers your purchase impulse in-store?','How important is screen size to you?','What concerns you most when buying?','How do you research before visiting a store?','What would stop you from buying today?'];
+  var fallback_ko=['매장에서 충동구매 하게 만드는 게 뭐야?','화면 크기가 얼마나 중요해?','구매할 때 제일 걱정되는 게 뭐야?','매장 가기 전에 온라인 리서치 어떻게 해?','오늘 당장 안 사게 만드는 이유가 있다면?'];
+  var fallback_en=['What triggers your purchase impulse in-store?','How important is screen size to you?','What concerns you most when buying?','How do you research before visiting a store?','What would stop you from buying today?'];
+  var qs = uiLang==='ko' ? (qsByType_ko[p.consumer_type]||fallback_ko) : (qsByType_en[p.consumer_type]||fallback_en);
   document.getElementById('quickBar').innerHTML=qs.map(q=>
     `<span class="quick-q" onclick="prefill('${q.replace(/'/g,"\\'")}')">
       ${q.length>42?q.slice(0,42)+'…':q}
     </span>`).join('');
-  document.getElementById('chatMessages').innerHTML='';
-  appendMsg('persona', opener(selected), selected);
-  document.getElementById('chatInput').focus();
 }
 function prefill(q){ document.getElementById('chatInput').value=q; sendMsg(); }
 
@@ -1278,12 +1364,16 @@ function appendMsg(role,text,persona){
   bub.appendChild(txt);
   if(role==='persona'&&persona){
     var src=document.createElement('div'); src.className='msg-source';
-    src.innerHTML=`<div class="msg-source-icon"></div><div><strong>Context:</strong> ${TYPES[persona.consumer_type].label} · ${persona.country} · Age ${persona.age} · Based on consumer behavior research</div>`;
+    var ctxLabel = uiLang==='ko'
+      ? '<strong>컨텍스트:</strong> '+TYPES[persona.consumer_type].label+' · '+persona.country+' · '+persona.age+'세 · 소비자 행동 리서치 기반'
+      : '<strong>Context:</strong> '+TYPES[persona.consumer_type].label+' · '+persona.country+' · Age '+persona.age+' · Based on consumer behavior research';
+    src.innerHTML=`<div class="msg-source-icon"></div><div>${ctxLabel}</div>`;
     bub.appendChild(src);
     // Confidence layer
     var conf = getConfidenceData(persona.consumer_type, lastQ);
     var cl = document.createElement('div'); cl.className='conf-layer';
-    cl.innerHTML=`<span class="conf-badge">${conf.count} studies support this view</span><span class="conf-sources">${conf.sources.join(' · ')}</span>`;
+    var confText = uiLang==='ko' ? conf.count+'개 연구가 뒷받침합니다' : conf.count+' studies support this view';
+    cl.innerHTML='<span class="conf-badge">'+confText+'</span><span class="conf-sources">'+conf.sources.join(' · ')+'</span>';
     bub.appendChild(cl);
   }
   d.appendChild(av); d.appendChild(bub);
@@ -1306,18 +1396,22 @@ function runBulk(){
   if(existing) existing.remove();
   var panel=document.createElement('div');
   panel.id='bulkPanel'; panel.className='bulk-results';
-  panel.innerHTML=`<div class="bulk-result-header">
-    <div class="bulk-result-title">Panel Response — "${q}"</div>
-    <div class="bulk-result-meta">${sample.length} representative personas from ${filtered.length.toLocaleString()} filtered</div>
-  </div>
-  <div class="bulk-result-body" id="bulkBody"></div>
-  <div style="padding:var(--space-3) var(--space-5);border-top:1px solid var(--n100);flex-shrink:0;display:flex;gap:var(--space-3);align-items:center">
-    <button class="back-btn" onclick="clearBulk()">← Back to personas</button>
-    <button class="tc-btn-export" onclick="exportPDFReport()" id="exportBtn">
-      <svg viewBox="0 0 24 24"><path d="M12 15V3m0 12l-4-4m4 4l4-4M2 17l.621 2.485A2 2 0 004.561 21h14.878a2 2 0 001.94-1.515L22 17"/></svg>
-      Export PDF Report
-    </button>
-  </div>`;
+  var headerTitle = uiLang==='ko' ? '패널 응답 — "'+q+'"' : 'Panel Response — "'+q+'"';
+  var headerMeta = uiLang==='ko'
+    ? filtered.length.toLocaleString()+'명 필터 중 대표 '+sample.length+'명 응답'
+    : sample.length+' representative personas from '+filtered.length.toLocaleString()+' filtered';
+  var backTxt = uiLang==='ko' ? '← 페르소나로 돌아가기' : '← Back to personas';
+  var exportTxt = uiLang==='ko' ? 'PDF 리포트 내보내기' : 'Export PDF Report';
+  panel.innerHTML='<div class="bulk-result-header">'
+    +'<div class="bulk-result-title">'+headerTitle+'</div>'
+    +'<div class="bulk-result-meta">'+headerMeta+'</div>'
+    +'</div>'
+    +'<div class="bulk-result-body" id="bulkBody"></div>'
+    +'<div style="padding:var(--space-3) var(--space-5);border-top:1px solid var(--n100);flex-shrink:0;display:flex;gap:var(--space-3);align-items:center">'
+    +'<button class="back-btn" onclick="clearBulk()">'+backTxt+'</button>'
+    +'<button class="tc-btn-export" onclick="exportPDFReport()" id="exportBtn">'
+    +'<svg viewBox="0 0 24 24"><path d="M12 15V3m0 12l-4-4m4 4l4-4M2 17l.621 2.485A2 2 0 004.561 21h14.878a2 2 0 001.94-1.515L22 17"/></svg>'
+    +exportTxt+'</button></div>';
   var ma=document.getElementById('mainArea');
   ma.insertBefore(panel, document.querySelector('.bulk-bar'));
   var body=document.getElementById('bulkBody');
@@ -1326,17 +1420,19 @@ function runBulk(){
   var consensusRows = getBulkConsensus(q, sample);
   lastBulkData = {q, sample, consensusRows};
   var cpanel = document.createElement('div'); cpanel.className='consensus-panel';
-  cpanel.innerHTML=`<div class="consensus-title"><span class="consensus-dot"></span>Consensus Signal — What the Research Says</div>`
-    + consensusRows.map(r=>{
+  var consensusTitle = uiLang==='ko' ? '컨센서스 시그널 — 리서치가 말하는 것' : 'Consensus Signal — What the Research Says';
+  var supportedByTxt = uiLang==='ko' ? '근거:' : 'Supported by:';
+  cpanel.innerHTML='<div class="consensus-title"><span class="consensus-dot"></span>'+consensusTitle+'</div>'
+    + consensusRows.map(function(r){
       var pct = Math.round((r.score/sample.length)*100);
       var cls = pct>=75?'score-hi':pct>=50?'score-md':'score-lo';
-      return `<div class="consensus-row">
-        <div class="consensus-text">
-          <div class="consensus-finding">${r.finding}</div>
-          <div class="consensus-support">Supported by: ${r.support}</div>
-        </div>
-        <span class="consensus-score ${cls}">${r.score}/${sample.length}</span>
-      </div>`;
+      return '<div class="consensus-row">'
+        +'<div class="consensus-text">'
+        +'<div class="consensus-finding">'+r.finding+'</div>'
+        +'<div class="consensus-support">'+supportedByTxt+' '+r.support+'</div>'
+        +'</div>'
+        +'<span class="consensus-score '+cls+'">'+r.score+'/'+sample.length+'</span>'
+        +'</div>';
     }).join('');
   body.appendChild(cpanel);
 
@@ -1346,18 +1442,21 @@ function runBulk(){
     var r=personaReply(p,q);
     var conf=getConfidenceData(p.consumer_type, q);
     var card=document.createElement('div'); card.className='bulk-insight-card';
-    card.innerHTML=`<div class="bic-header">
-      <div class="tc-avatar av-${p.consumer_type}" style="width:26px;height:26px;font-size:10px">${p.first_name[0]}${p.last_name[0]}</div>
-      <span class="bic-name">${p.name}</span>
-      <span class="tc-badge badge-${t.col}">${t.short}</span>
-      <span class="tc-badge badge-${p.country==='USA'?'usa':p.country==='Korea'?'korea':'europe'}">${p.country}</span>
-      <span style="font-family:'Sora',sans-serif;font-size:11px;color:var(--n400)">${p.age} · ${p.occupation}</span>
-    </div>
-    <div class="bic-body">${r}</div>
-    <div class="conf-layer" style="margin-top:8px;padding-top:8px;border-top:1px solid rgba(88,96,213,.08)">
-      <span class="conf-badge">${conf.count} studies support this</span>
-      <span class="conf-sources">${conf.sources.join(' · ')}</span>
-    </div>`;
+    var confBadgeTxt = uiLang==='ko' ? conf.count+'개 연구 뒷받침' : conf.count+' studies support this';
+    var cntryBadge = p.country==='USA'?'usa':p.country==='Korea'?'korea':'europe';
+    card.innerHTML=''
+      +'<div class="bic-header">'
+      +'<div class="tc-avatar av-'+p.consumer_type+'" style="width:26px;height:26px;font-size:10px">'+p.first_name[0]+p.last_name[0]+'</div>'
+      +'<span class="bic-name">'+p.name+'</span>'
+      +'<span class="tc-badge badge-'+t.col+'">'+t.short+'</span>'
+      +'<span class="tc-badge badge-'+cntryBadge+'">'+p.country+'</span>'
+      +'<span style="font-family:\'Sora\',sans-serif;font-size:11px;color:var(--n400)">'+p.age+' · '+p.occupation+'</span>'
+      +'</div>'
+      +'<div class="bic-body">'+r+'</div>'
+      +'<div class="conf-layer" style="margin-top:8px;padding-top:8px;border-top:1px solid rgba(88,96,213,.08)">'
+      +'<span class="conf-badge">'+confBadgeTxt+'</span>'
+      +'<span class="conf-sources">'+conf.sources.join(' · ')+'</span>'
+      +'</div>';
     body.appendChild(card);
   });
   document.getElementById('bulkInput').value='';
@@ -1374,7 +1473,7 @@ function exportPDFReport(){
   var countryBreakdown = {};
   sample.forEach(p=>{ countryBreakdown[p.country]=(countryBreakdown[p.country]||0)+1; });
 
-  var reportHTML = `<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8">
+  var reportHTML = `<!DOCTYPE html><html lang="ko"><head><meta charset="UTF-8">
 <title>AXPrism Research Report — ${q}</title>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Sora:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
@@ -1629,23 +1728,23 @@ function personaReply(p,q){
   var brands=p.brands_considering.join(', ');
   var cx=cultureNote(p);
 
-  var isSize    =/size|inch|big|large|small|fit|room|wall|dimension|space|wide|narrow/i.test(q);
-  var isHealth  =/eye|health|blue.?light|flicker|oled|strain|bright|vision|harm|fatigue|headache/i.test(q);
-  var isPrice   =/price|cost|budget|cheap|afford|deal|discount|money|value|worth|expensive/i.test(q);
-  var isFamily  =/family|kid|child|parent|together|simple|easy|age|grand|son|daughter|spouse/i.test(q);
-  var isSpec    =/spec|4k|8k|hdr|hz|refresh|resolution|processor|picture|quality|nit|brightness/i.test(q);
-  var isBrand   =/brand|samsung|lg|sony|tcl|hisense|philips|vizio|which|recommend|trust/i.test(q);
-  var isTrigger =/trigger|impulse|buy.*(spot|now|today)|what.*(make|makes|would)|decide|purchase/i.test(q);
-  var isResearch=/research|before|online|review|compare|check|rtings|youtube|reddit/i.test(q);
-  var isStop    =/stop|hesit|wait|not buy|hold|pause|walk.?away|leave/i.test(q);
-  var isPanel   =/panel|oled|qled|mini.?led|lcd|qd.?oled|nano|backlight|technology|type/i.test(q);
-  var isTiming  =/when|timing|best time|season|black friday|super bowl|sale|wait/i.test(q);
-  var isWhere   =/where|store|costco|best.?buy|amazon|online|retailer|shop|naver|coupang/i.test(q);
-  var isMount   =/mount|wall|install|hang|stand|bezel|design|look/i.test(q);
-  var isGaming  =/game|gaming|ps5|xbox|input lag|refresh|console|hdmi/i.test(q);
-  var isStream  =/stream|netflix|youtube|disney|app|platform|smart|tizen|webos|google/i.test(q);
-  var isRegret  =/regret|mistake|wrong|error|lesson|wish|should|bad|wrong/i.test(q);
-  var isUpgrade =/upgrade|replace|old|current|keep|switch|time to|worth.*upgrade/i.test(q);
+  var isSize    =/size|inch|big|large|small|fit|room|wall|dimension|space|wide|narrow|크기|인치|사이즈|넓|좁|방|벽|공간|거실|화면|몇인치/i.test(q);
+  var isHealth  =/eye|health|blue.?light|flicker|oled|strain|bright|vision|harm|fatigue|headache|눈|건강|피로|시력|블루라이트|두통|눈부심|불편/i.test(q);
+  var isPrice   =/price|cost|budget|cheap|afford|deal|discount|money|value|worth|expensive|가격|비용|예산|저렴|할인|돈|가성비|얼마|비싸|싸|금액/i.test(q);
+  var isFamily  =/family|kid|child|parent|together|simple|easy|age|grand|son|daughter|spouse|가족|아이|어린이|부모|아들|딸|남편|아내|함께|쉬운|온가족|노인/i.test(q);
+  var isSpec    =/spec|4k|8k|hdr|hz|refresh|resolution|processor|picture|quality|nit|brightness|스펙|화질|해상도|밝기|사양|선명|성능/i.test(q);
+  var isBrand   =/brand|samsung|lg|sony|tcl|hisense|philips|vizio|which|recommend|trust|브랜드|삼성|소니|어떤|추천|믿|신뢰/i.test(q);
+  var isTrigger =/trigger|impulse|buy.*(spot|now|today)|what.*(make|makes|would)|decide|purchase|관심|충동|구매|사고싶|결정|흥미|끌리|이유|뭐가|무엇|마음|눈길|눈이|먼저|고려|시선|끌|처음|제일 먼저|가장 먼저|attention|first|catch/i.test(q);
+  var isResearch=/research|before|online|review|compare|check|rtings|youtube|reddit|리서치|조사|비교|리뷰|확인|알아보|검색|찾아보/i.test(q);
+  var isStop    =/stop|hesit|wait|not buy|hold|pause|walk.?away|leave|안사|망설|기다|포기|그만|걸림|막히/i.test(q);
+  var isPanel   =/panel|oled|qled|mini.?led|lcd|qd.?oled|nano|backlight|technology|type|패널|올레드|액정|디스플레이|화면기술/i.test(q);
+  var isTiming  =/when|timing|best time|season|black friday|super bowl|sale|wait|언제|타이밍|시기|세일|기다|할인기간|블프/i.test(q);
+  var isWhere   =/where|store|costco|best.?buy|amazon|online|retailer|shop|naver|coupang|매장|코스코|베스트바이|베스트 바이|코스트코|아마존|쿠팡|네이버|온라인|오프라인|백화점|마트|어디|가게|하이마트/i.test(q);
+  var isMount   =/mount|wall|install|hang|stand|bezel|design|look|설치|벽걸이|거치|디자인|외관|생김새|인테리어/i.test(q);
+  var isGaming  =/game|gaming|ps5|xbox|input lag|refresh|console|hdmi|게임|콘솔|플스|엑박|게이밍/i.test(q);
+  var isStream  =/stream|netflix|youtube|disney|app|platform|smart|tizen|webos|google|넷플릭스|유튜브|스트리밍|앱|플랫폼|스마트|콘텐츠/i.test(q);
+  var isRegret  =/regret|mistake|wrong|error|lesson|wish|should|bad|후회|실수|잘못|아쉬|그랬더라면/i.test(q);
+  var isUpgrade =/upgrade|replace|old|current|keep|switch|time to|worth.*upgrade|교체|업그레이드|바꾸|구형|신형|바꿀|갈아/i.test(q);
 
   // ─────────── TYPE A: Space-First ───────────────
   if(t==='A'){
