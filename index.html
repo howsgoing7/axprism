@@ -86,6 +86,91 @@ h1,h2,h3,.heading{font-family:'Poppins',sans-serif}
   transition:all .2s;
 }
 .lang-toggle:hover{background:var(--tc-indigo);color:#fff;border-color:var(--tc-indigo)}
+
+/* ── STATISTICS VIEW ─────────────────────────────── */
+.stats-container{
+  flex:1; overflow-y:auto; padding:var(--space-5);
+  display:flex; flex-direction:column; gap:var(--space-4);
+}
+.stats-header{
+  display:flex; align-items:center; justify-content:space-between;
+  padding:var(--space-4) var(--space-5);
+  background:var(--n0); border-radius:12px;
+  border:1px solid var(--n200);
+}
+.stats-title{
+  font-family:'Poppins',sans-serif; font-size:16px; font-weight:700;
+  color:var(--tc-navy); margin-bottom:3px;
+}
+.stats-subtitle{font-family:'Sora',sans-serif; font-size:12px; color:var(--n500)}
+.stats-total-badge{
+  font-family:'Poppins',sans-serif; font-size:13px; font-weight:700;
+  color:var(--tc-indigo); background:var(--tc-bg-pale);
+  padding:8px 16px; border-radius:20px; border:1px solid rgba(88,96,213,.2);
+  white-space:nowrap;
+}
+.stats-row{
+  display:grid; grid-template-columns:1fr 1fr; gap:var(--space-4);
+}
+.stat-card{
+  background:var(--n0); border-radius:12px;
+  border:1px solid var(--n200); padding:var(--space-5);
+}
+.stat-card-title{
+  font-family:'Poppins',sans-serif; font-size:12px; font-weight:700;
+  color:var(--tc-navy); letter-spacing:.3px; margin-bottom:var(--space-4);
+  text-transform:uppercase; font-size:11px;
+}
+.stat-bars{display:flex; flex-direction:column; gap:10px}
+.stat-bar-row{display:flex; align-items:center; gap:10px}
+.stat-bar-label{
+  font-family:'Poppins',sans-serif; font-size:12px; font-weight:500;
+  color:var(--n700); width:80px; flex-shrink:0; text-align:right;
+}
+.stat-bar-wrap{flex:1; background:var(--n100); border-radius:4px; height:22px; position:relative; overflow:hidden}
+.stat-bar-fill{
+  height:100%; border-radius:4px;
+  transition:width .6s cubic-bezier(.4,0,.2,1);
+  display:flex; align-items:center; justify-content:flex-end; padding-right:8px;
+}
+.stat-bar-pct{
+  font-family:'Poppins',sans-serif; font-size:10px; font-weight:700;
+  color:#fff; white-space:nowrap;
+}
+.stat-bar-count{
+  font-family:'Sora',sans-serif; font-size:11px; color:var(--n500);
+  width:52px; flex-shrink:0; text-align:right;
+}
+/* Bar colors by type */
+.bar-A{background:linear-gradient(90deg,#1E2E69,#5860D5)}
+.bar-B{background:linear-gradient(90deg,#0E97D0,#22C55E)}
+.bar-C{background:linear-gradient(90deg,#F59E0B,#D97706)}
+.bar-D{background:linear-gradient(90deg,#D46BC4,#F5A8D6)}
+.bar-E{background:linear-gradient(90deg,#5860D5,#0E97D0)}
+.bar-USA{background:linear-gradient(90deg,#EF4444,#DC2626)}
+.bar-Korea{background:linear-gradient(90deg,#3B82F6,#2563EB)}
+.bar-Europe{background:linear-gradient(90deg,#22C55E,#16A34A)}
+.bar-age{background:linear-gradient(90deg,var(--tc-indigo),var(--tc-cyan))}
+.bar-male{background:linear-gradient(90deg,#3B82F6,#1D4ED8)}
+.bar-female{background:linear-gradient(90deg,#EC4899,#BE185D)}
+/* Insight grid */
+.stat-insights{
+  display:grid; grid-template-columns:repeat(5,1fr); gap:var(--space-3);
+}
+.insight-item{
+  background:var(--tc-bg-pale); border-radius:10px; padding:var(--space-4);
+  border:1px solid rgba(88,96,213,.1);
+}
+.insight-type{
+  font-family:'Poppins',sans-serif; font-size:10px; font-weight:700;
+  letter-spacing:.4px; text-transform:uppercase; margin-bottom:6px;
+}
+.insight-num{
+  font-family:'Poppins',sans-serif; font-size:20px; font-weight:700;
+  background:var(--tc-gradient-text); -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent; line-height:1.1; margin-bottom:4px;
+}
+.insight-desc{font-family:'Sora',sans-serif; font-size:11px; color:var(--n600); line-height:1.5}
 .nav-stat{
   font-family:'Poppins',sans-serif; font-size:11px; color:var(--n500);
   padding:5px 12px; border-radius:20px; border:1px solid var(--n200);
@@ -649,7 +734,7 @@ h1,h2,h3,.heading{font-family:'Poppins',sans-serif}
   </div>
   <div class="nav-modes">
     <button class="mode-btn active" id="researchBtn" onclick="setMode('research')" data-ko="리서치" data-en="Research">리서치</button>
-    <button class="mode-btn" id="consumerBtn" onclick="setMode('consumer')" data-ko="소비자 모드" data-en="Consumer">소비자 모드</button>
+    <button class="mode-btn" id="consumerBtn" onclick="setMode('consumer')" data-ko="통계 뷰" data-en="Statistics">통계 뷰</button>
   </div>
   <div class="nav-right">
     <div class="nav-stat" id="panelStatLabel">패널: <strong id="filteredCount">3,000</strong></div>
@@ -848,80 +933,50 @@ h1,h2,h3,.heading{font-family:'Poppins',sans-serif}
 </div><!-- /researchMode -->
 
 
-<!-- ════════ CONSUMER MODE ════════ -->
-<div id="consumerMode" style="display:none;flex:1;flex-direction:column;overflow:hidden">
-  <div class="consumer-hero">
-    <div class="ch-tag">TV Purchase Advisor</div>
-    <h2>Find your <strong>perfect TV</strong> — trusted guidance</h2>
-    <p>Powered by 3,000 consumer insights across USA, Korea &amp; Europe. No brand sponsorship. No hidden agenda.</p>
-  </div>
-  <div class="consumer-body">
-    <div class="consumer-form">
-      <div class="form-group">
-        <label class="tc-label">Your Country</label>
-        <select class="tc-select" id="cCountry" onchange="updateMatch()">
-          <option value="USA">United States</option>
-          <option value="Korea">South Korea</option>
-          <option value="Europe">Europe</option>
-        </select>
+<!-- ════════ STATISTICS MODE ════════ -->
+<div id="consumerMode" style="display:none;flex:1;flex-direction:column;overflow:hidden;background:var(--n50)">
+  <div class="stats-container" id="statsContainer">
+    <!-- Header -->
+    <div class="stats-header">
+      <div>
+        <div class="stats-title">소비자 패널 통계 분석</div>
+        <div class="stats-subtitle" id="statsSubtitle">전체 3,000명 기준 · 좌측 필터 적용 시 실시간 업데이트</div>
       </div>
-      <div class="form-group">
-        <label class="tc-label">Age Range</label>
-        <select class="tc-select" id="cAge" onchange="updateMatch()">
-          <option>25-34</option><option>35-44</option>
-          <option>45-54</option><option>55-64</option><option>65+</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label class="tc-label">Room Size</label>
-        <select class="tc-select" id="cRoom" onchange="updateMatch()">
-          <option value="small">Small (under 150 sqft)</option>
-          <option value="medium">Medium (150–300 sqft)</option>
-          <option value="large">Large (300+ sqft)</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label class="tc-label">Family Situation</label>
-        <select class="tc-select" id="cFamily" onchange="updateMatch()">
-          <option value="single">Single / Couple, no kids</option>
-          <option value="family">Family with children</option>
-          <option value="senior">Senior / Empty nester</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label class="tc-label">Budget</label>
-        <select class="tc-select" id="cBudget" onchange="updateMatch()">
-          <option value="low">Under $500</option>
-          <option value="middle" selected>$500 – $1,500</option>
-          <option value="high">$1,500+</option>
-        </select>
-      </div>
-      <div class="form-group" style="margin-bottom:var(--space-5)">
-        <label class="tc-label">Top Priority</label>
-        <select class="tc-select" id="cPriority" onchange="updateMatch()">
-          <option value="A">Room fit &amp; aesthetics</option>
-          <option value="B">Eye health &amp; comfort</option>
-          <option value="C">Best value for money</option>
-          <option value="D">Family entertainment</option>
-          <option value="E">Best specs &amp; picture</option>
-        </select>
-      </div>
-      <div class="match-card">
-        <div class="match-label">Your Persona Match</div>
-        <div class="match-type" id="matchType">Space-First Consumer</div>
-        <div class="match-desc" id="matchDesc">You prioritize how the TV fits your space and interior harmony.</div>
-        <div class="match-stat" id="matchStat">
-          <span>Loading…</span>
-        </div>
-      </div>
-      <button class="tc-btn-start" onclick="startConsult()">Start Consultation</button>
+      <div class="stats-total-badge" id="statsTotalBadge">3,000명 분석 중</div>
     </div>
-    <div class="consumer-chat" id="consumerChatArea">
-      <div class="welcome-hero" style="flex:1">
-        <div class="welcome-badge">AI Advisor</div>
-        <div class="welcome-title" style="font-size:clamp(22px,2.5vw,32px)">Your <strong>trusted</strong> TV guide</div>
-        <p class="welcome-desc">Fill in your profile and click Start Consultation.<br>All advice is based on verified consumer panel data — no brand bias.</p>
+
+    <!-- ROW 1: Type + Country -->
+    <div class="stats-row">
+      <!-- Consumer Type Distribution -->
+      <div class="stat-card">
+        <div class="stat-card-title">소비자 유형 분포</div>
+        <div class="stat-bars" id="typeChart"></div>
       </div>
+      <!-- Country Distribution -->
+      <div class="stat-card">
+        <div class="stat-card-title">국가별 분포</div>
+        <div class="stat-bars" id="countryChart"></div>
+      </div>
+    </div>
+
+    <!-- ROW 2: Age + Gender -->
+    <div class="stats-row">
+      <!-- Age Distribution -->
+      <div class="stat-card">
+        <div class="stat-card-title">연령대 분포</div>
+        <div class="stat-bars" id="ageChart"></div>
+      </div>
+      <!-- Gender Distribution -->
+      <div class="stat-card">
+        <div class="stat-card-title">성별 분포</div>
+        <div class="stat-bars" id="genderChart"></div>
+      </div>
+    </div>
+
+    <!-- ROW 3: Cross-analysis insights -->
+    <div class="stat-card" style="margin:0 var(--space-5) var(--space-5)">
+      <div class="stat-card-title">유형별 핵심 인사이트</div>
+      <div class="stat-insights" id="insightGrid"></div>
     </div>
   </div>
 </div>
@@ -1205,7 +1260,79 @@ function setMode(m){
   document.getElementById('consumerMode').style.display = m==='consumer'?'flex':'none';
   document.getElementById('researchBtn').classList.toggle('active', m==='research');
   document.getElementById('consumerBtn').classList.toggle('active', m==='consumer');
-  if(m==='consumer') updateMatch();
+  if(m==='consumer') renderStats();
+}
+
+// ── STATISTICS RENDERING ──────────────────────────
+function renderStats(){
+  var src = all.length ? all : [];
+  // Apply same filters as sidebar
+  var data = src.filter(p=>{
+    if(filters.country!=='all' && p.country!==filters.country) return false;
+    if(filters.type!=='all' && p.consumer_type!==filters.type) return false;
+    if(filters.age!=='all' && p.age_band!==filters.age) return false;
+    if(filters.gender!=='all' && p.gender!==filters.gender) return false;
+    return true;
+  });
+  var n = data.length;
+  if(!n){ document.getElementById('statsContainer').innerHTML='<div style="padding:40px;text-align:center;color:var(--n400)">필터 조건에 맞는 페르소나가 없습니다.</div>'; return; }
+
+  // Update header
+  document.getElementById('statsTotalBadge').textContent = n.toLocaleString()+'명 분석 중';
+  document.getElementById('statsSubtitle').textContent = '현재 필터 기준 '+n.toLocaleString()+'명 · 좌측 필터 변경 시 실시간 업데이트';
+
+  // Count helper
+  function count(arr, key){ var r={}; arr.forEach(p=>{ r[p[key]]=(r[p[key]]||0)+1; }); return r; }
+  function barHTML(label, cnt, total, colorClass){
+    var pct = Math.round((cnt/total)*100);
+    var w = Math.max(pct, pct<1?0:3);
+    return '<div class="stat-bar-row">'
+      +'<div class="stat-bar-label">'+label+'</div>'
+      +'<div class="stat-bar-wrap"><div class="stat-bar-fill '+colorClass+'" style="width:'+w+'%"><span class="stat-bar-pct">'+pct+'%</span></div></div>'
+      +'<div class="stat-bar-count">'+cnt.toLocaleString()+'명</div>'
+      +'</div>';
+  }
+
+  // ── 소비자 유형 차트
+  var typeCnt = count(data,'consumer_type');
+  var typeLabels={A:'공간중심',B:'건강중심',C:'가격중심',D:'가족중심',E:'스펙중심'};
+  document.getElementById('typeChart').innerHTML = ['A','B','C','D','E'].map(t=>
+    barHTML(typeLabels[t], typeCnt[t]||0, n, 'bar-'+t)
+  ).join('');
+
+  // ── 국가 차트
+  var cntCnt = count(data,'country');
+  document.getElementById('countryChart').innerHTML = ['USA','Korea','Europe'].map(c=>
+    barHTML(c==='Korea'?'한국':c==='Europe'?'유럽':c, cntCnt[c]||0, n, 'bar-'+c)
+  ).join('');
+
+  // ── 연령 차트
+  var ageCnt = count(data,'age_band');
+  document.getElementById('ageChart').innerHTML = ['25-34','35-44','45-54','55-64','65+'].map(a=>
+    barHTML(a+'세', ageCnt[a]||0, n, 'bar-age')
+  ).join('');
+
+  // ── 성별 차트
+  var genCnt = count(data,'gender');
+  document.getElementById('genderChart').innerHTML = ['Male','Female'].map(g=>
+    barHTML(g==='Male'?'남성':'여성', genCnt[g]||0, n, g==='Male'?'bar-male':'bar-female')
+  ).join('');
+
+  // ── 유형별 인사이트
+  var insights=[
+    {type:'공간중심',col:'var(--tc-navy)',num:(Math.round((typeCnt['A']||0)/n*100))+'%',desc:'공간 & 인테리어 우선, TV 반품 1위 원인은 잘못된 사이즈'},
+    {type:'건강중심',col:'var(--tc-cyan)',num:(Math.round((typeCnt['B']||0)/n*100))+'%',desc:'눈 건강 & 인증 마크 최우선, 프리미엄 가격 수용'},
+    {type:'가격중심',col:'var(--tc-amber||#F59E0B)',num:(Math.round((typeCnt['C']||0)/n*100))+'%',desc:'3개+ 플랫폼 가격 비교, 블랙프라이데이 타이밍 중시'},
+    {type:'가족중심',col:'var(--tc-magenta)',num:(Math.round((typeCnt['D']||0)/n*100))+'%',desc:'UI 단순함 & 콘텐츠 다양성 최우선, 리모컨 UI 중요'},
+    {type:'스펙중심',col:'var(--tc-indigo)',num:(Math.round((typeCnt['E']||0)/n*100))+'%',desc:'RTINGS/YouTube 필수 참고, HDR 인증 실제 검증'},
+  ];
+  document.getElementById('insightGrid').innerHTML = insights.map(i=>
+    '<div class="insight-item">'
+    +'<div class="insight-type" style="color:'+i.col+'">'+i.type+'</div>'
+    +'<div class="insight-num">'+i.num+'</div>'
+    +'<div class="insight-desc">'+i.desc+'</div>'
+    +'</div>'
+  ).join('');
 }
 
 // ── TRUST PANEL ────────────────────────────────────
@@ -1250,6 +1377,8 @@ function applyFilters(){
   document.getElementById('filteredCount').textContent = filtered.length.toLocaleString();
   document.getElementById('bulkCount').textContent = filtered.length.toLocaleString();
   renderList();
+  // 통계 뷰가 열려있으면 실시간 업데이트
+  if(document.getElementById('consumerMode').style.display !== 'none') renderStats();
 }
 function renderList(){
   var el = document.getElementById('personaList');
